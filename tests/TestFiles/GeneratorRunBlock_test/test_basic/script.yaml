@@ -1,0 +1,7 @@
+---
+steps:
+  - run: 
+      cmd: echo $shapes $color
+      inputFile: input/inp.txt
+      outputFile: output/out.txt
+      exitCode: 0

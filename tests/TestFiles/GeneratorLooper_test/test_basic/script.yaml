@@ -1,0 +1,22 @@
+---
+entries:
+  zip:
+    shape:
+    - circle
+    - square
+    - triangle
+    color:
+    - red
+    - yellow
+steps:
+  - Serial:
+      entries:
+        product:
+          shape:
+            - circle
+            - square
+            - triangle
+          color:
+            - red
+            - yellow
+failfast: false

@@ -1,0 +1,10 @@
+---
+entries2:
+  zip:
+    shape:
+    - circle
+    - square
+    - triangle
+    color:
+    - red
+    - yellow

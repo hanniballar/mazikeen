@@ -1,0 +1,3 @@
+---
+steps:
+  - diff: output/leftpath output/rightpath

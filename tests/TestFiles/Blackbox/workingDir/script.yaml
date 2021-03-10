@@ -1,0 +1,9 @@
+---
+steps:
+  - rmdir: Output
+  - makedirs: Output
+  - run: 
+      cmd: python stdinTostdout.py
+      inputFile: Input/in.txt
+      outputFile: Output/out.txt
+  - diff: Output/out.txt Expected/out.txt

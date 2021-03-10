@@ -1,0 +1,19 @@
+---
+version: 1.0.0
+steps:
+  - makedirs: Output
+  - parallel:
+      entries:
+        product:
+          idx:
+            - 1
+            - 2
+            - 3
+            - 4
+      max_workers: 6
+      steps:
+        - serial:
+            steps:
+              - rmdir: Output
+              - run: echo "Parallel${idx}" > Output/parallel${idx}
+              - diff: Output/parallel${idx} Expected/parallel${idx}

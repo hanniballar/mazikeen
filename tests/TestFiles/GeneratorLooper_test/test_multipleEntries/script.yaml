@@ -1,0 +1,17 @@
+---
+entries:
+  zip:
+    shape:
+    - circle
+    - square
+    - triangle
+    color:
+    - red
+    - yellow
+  product:
+    fruit:
+    - apple
+    - banana
+    vegetable:
+    - onion
+    - carot

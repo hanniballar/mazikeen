@@ -1,0 +1,21 @@
+---
+steps:
+  - parallel:
+      entries:
+        product:
+          shape:
+            - circle
+            - square
+            - triangle
+          color:
+            - red
+            - yellow
+      max_workers:
+        color: red
+        shape: circle
+      steps:
+        - serial:
+            entries:
+              product:
+                shape:
+                  - circle

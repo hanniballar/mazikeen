@@ -1,0 +1,34 @@
+---
+serialLoop:
+  entries:
+    product:
+      shape:
+      - circle
+      - square
+      - triangle
+      color:
+      - red
+      - yellow
+      - blue
+  steps:
+  - run: echo $shape $color
+    outputFile: output/outs1.txt
+    exitCode: 0
+  - parallelLoop:
+      entries:
+        zip:
+          shape:
+          - circle
+          - square
+          - triangle
+          color:
+          - red
+          - yellow
+          - blue
+      steps:
+      - run: echo $shapes $color
+        outputFile: output/outp1.txt
+        exitCode: 0
+      - run: echo $color $shape
+        outputFile: output/outp2.txt
+        exitCode: 0

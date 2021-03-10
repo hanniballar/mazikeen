@@ -1,0 +1,6 @@
+line1
+line2
+ignoreLine1
+ignoreLine2
+ignoreLine3
+line3

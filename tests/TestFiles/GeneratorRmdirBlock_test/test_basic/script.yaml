@@ -1,0 +1,3 @@
+---
+steps:
+  - rmdir: Output/GeneratorRmdirBlock_test/TestDir1
