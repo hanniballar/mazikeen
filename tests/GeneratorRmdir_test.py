@@ -1,9 +1,9 @@
 import unittest
 import yaml
-from GeneratorLooper import generateSerialBlock
-from GeneratorUtils import SafeLineLoader
-from RmdirBlock import RmdirBlock
-from GeneratorException import GeneratorException
+from mazikeen.GeneratorLooper import generateSerialBlock
+from mazikeen.GeneratorUtils import SafeLineLoader
+from mazikeen.RmdirBlock import RmdirBlock
+from mazikeen.GeneratorException import GeneratorException
 
 class GeneratorRmdirBlock_test(unittest.TestCase):
     def test_basic(self):

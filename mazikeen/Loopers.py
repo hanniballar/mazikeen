@@ -60,7 +60,7 @@ class Parallel(Looper):
     def _runEntry(self, poolExecutor, workingDir, variables, printer):
         for step in self.steps:
             with self.addFutureLock:
-                if (self.foundFailure and self.failfast): return;
+                if (self.foundFailure and self.failfast): return
                 self.listFutures.append(poolExecutor.submit(self._runStep, step, workingDir = workingDir, variables = variables, printer = printer))
     
     def run(self, workingDir = "", variables = {}, printer = Printer()):

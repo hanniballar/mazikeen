@@ -2,9 +2,9 @@ import unittest
 import os
 import io
 import sys
-from RunBlock import RunBlock
-from ConsolePrinter import Printer
-from Utils import rmtree
+from mazikeen.RunBlock import RunBlock
+from mazikeen.ConsolePrinter import Printer
+from mazikeen.Utils import rmtree
 
 class RunBlockTest(unittest.TestCase):
     def test_basic(self):
@@ -15,25 +15,25 @@ class RunBlockTest(unittest.TestCase):
     def test_basicVerbose(self):
         capturedOutput = io.StringIO()
         sys.stdout = capturedOutput
-        printer = Printer(verbose = True);
+        printer = Printer(verbose = True)
         cmdString = 'echo "Hello World"'
         cmdExe = RunBlock(cmdString)
         res = cmdExe.run(printer = printer)
         sys.stdout = sys.__stdout__
-        expectedResult = "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n";
+        expectedResult = "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n"
         
         self.assertEqual(res, True)
         self.assertEqual(expectedResult, capturedOutput.getvalue())
     
     def test_unexpectedExitCodeVerbose(self):
-        printer = Printer(verbose = True);
+        printer = Printer(verbose = True)
         capturedOutput = io.StringIO()
         sys.stdout = capturedOutput
-        cmdString = 'exit 1'
+        cmdString = '"' + sys.executable + '"'  + ' -c "exit(1)"'
         cmdExe = RunBlock(cmdString)
         res = cmdExe.run(printer = printer)
         sys.stdout = sys.__stdout__
-        expectedResult = "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n" + 'Error: different exitcode received: 1 != 0 for command \'exit 1\'' + "\n";
+        expectedResult = "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n" + 'Error: different exitcode received: 1 != 0 for command \'' + cmdString + "\'\n"
         
         self.assertEqual(res, False)
         resStr = capturedOutput.getvalue()
@@ -46,7 +46,7 @@ class RunBlockTest(unittest.TestCase):
         capturedOutput = io.StringIO()
         sys.stdout = capturedOutput
         
-        cmdExe = RunBlock("python RunBlock_test/stdinTostdout.py", inputfile="RunBlock_test/stdinTostdout.py", outputfile="RunBlock_test/Output/inputfileNoutputfile.txt")
+        cmdExe = RunBlock('"' + sys.executable + '"' + " RunBlock_test/stdinTostdout.py", inputfile="RunBlock_test/stdinTostdout.py", outputfile="RunBlock_test/Output/inputfileNoutputfile.txt")
         res = cmdExe.run(workingDir = "TestFiles",printer = printer)
         sys.stdout = sys.__stdout__
         

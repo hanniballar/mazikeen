@@ -2,7 +2,7 @@ import unittest
 import os
 import io
 import sys
-from ConsolePrinter import Printer, BufferedPrinter
+from mazikeen.ConsolePrinter import Printer, BufferedPrinter
 
 class ConsolePrinterTest(unittest.TestCase):
     def test_basic(self):

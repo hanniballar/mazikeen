@@ -1,0 +1,65 @@
+# This workflow will upload a Python Package using Twine when a release is created
+# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
+
+name: Test package
+
+on: [push]
+
+jobs:
+  test_linux:
+    name: Test Linux
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ 3.6, 3.7, 3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python # Set Python version
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    # Install pip and pytest
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install unittest-xml-reporting
+        pip install wheel
+    - name: Build mazikeen
+      run: |
+        python setup.py bdist_wheel
+        pip install dist/*
+    - name: Test with unittest
+      run: |
+        cd tests
+        python -m xmlrunner discover . -p '*_test.py'
+
+  test_windows:
+    name: Test Windows
+
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: [ 3.6, 3.7, 3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python # Set Python version
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    # Install pip and pytest
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install unittest-xml-reporting
+        pip install wheel
+    - name: Build mazikeen
+      run: |
+        python setup.py bdist_wheel
+        Get-ChildItem -File dist | Foreach {pip install $_.fullname}
+    - name: Test with unittest
+      run: |
+        cd tests
+        python -m xmlrunner discover . -p '*_test.py'

@@ -15,14 +15,14 @@ class RunBlock:
 
     def run(self, workingDir = ".", variables = {}, printer = Printer()):
         replCmd = replaceVariables(self.cmd, variables)
-        cmdNArgs = shlex.split(replCmd);
+        cmdNArgs = shlex.split(replCmd)
         printer.verbose("cwd:", os.getcwd())
         printer.verbose("call:", replCmd)
         inputfileData = None
         if self.inputfile:
             with open(pathlib.PurePath(workingDir).joinpath(self.inputfile), "rb") as fh:
                 inputfileData = fh.read()
-        subProcessRes = subprocess.run(cmdNArgs, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, input=inputfileData, shell=True, cwd = workingDir)
+        subProcessRes = subprocess.run(cmdNArgs, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, input=inputfileData, cwd = workingDir)
         if self.outputfile:
             outputfileFullPath = str(pathlib.PurePath(workingDir).joinpath(self.outputfile))
             ensure_dir(outputfileFullPath)
@@ -32,5 +32,5 @@ class RunBlock:
         res = subProcessRes.returncode == self.exitcode
         if not res:
             printer.error("different exitcode received:", subProcessRes.returncode, "!=", self.exitcode, "for command '"+ str(replCmd) +"'")
-        return res;
+        return res
      

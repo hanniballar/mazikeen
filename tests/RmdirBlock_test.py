@@ -1,13 +1,13 @@
 import unittest
 import os
-from RmdirBlock import RmdirBlock
-from ConsolePrinter import Printer
-from Utils import ensure_dir
 import pathlib
+from mazikeen.RmdirBlock import RmdirBlock
+from mazikeen.ConsolePrinter import Printer
+from mazikeen.Utils import ensure_dir
 
 class RmdirsBlockTest(unittest.TestCase):
     def test_basic(self):
-        printer = Printer();
+        printer = Printer()
         testPath = pathlib.Path('TestFiles/RmdirBlockTest/Output/TestDir1')
         if not os.path.exists(testPath):
             os.makedirs(testPath)
@@ -18,7 +18,7 @@ class RmdirsBlockTest(unittest.TestCase):
         self.assertFalse(pathlib.Path('TestFiles/Output').is_dir())
     
     def test_basic_withTailoringSlash(self):
-        printer = Printer();
+        printer = Printer()
         testPath = pathlib.Path('TestFiles/RmdirBlockTest/Output/TestDir1/')
         if not os.path.exists(testPath):
             os.makedirs(testPath)

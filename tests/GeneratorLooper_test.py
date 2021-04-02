@@ -1,10 +1,10 @@
 import unittest
 import yaml
 import re
-import Loopers
-from GeneratorLooper import generateSerialBlock, generateParallelBlock
-from GeneratorException import GeneratorException
-from GeneratorUtils import SafeLineLoader
+from mazikeen.Loopers import Serial, Parallel
+from mazikeen.GeneratorLooper import generateSerialBlock, generateParallelBlock
+from mazikeen.GeneratorException import GeneratorException
+from mazikeen.GeneratorUtils import SafeLineLoader
 
 class GeneratorSerialTest(unittest.TestCase):
     def test_basic(self):
@@ -37,11 +37,11 @@ class GeneratorSerialTest(unittest.TestCase):
         with open('TestFiles/GeneratorLooper_test/test_parallel/script.yaml') as f:
             data = yaml.load(f, Loader=SafeLineLoader)
             block = generateSerialBlock(data)
-            self.assertTrue(isinstance(block.steps[0], Loopers.Parallel))
+            self.assertTrue(isinstance(block.steps[0], Parallel))
             self.assertEqual(block.failfast, False)
             self.assertEqual(block.steps[0].entries, [{'color': 'red', 'shape': 'circle'}, {'color': 'yellow', 'shape': 'circle'}, {'color': 'red', 'shape': 'square'}, {'color': 'yellow', 'shape': 'square'}, {'color': 'red', 'shape': 'triangle'}, {'color': 'yellow', 'shape': 'triangle'}])
             self.assertEqual(block.steps[0].max_workers, 5)
-            self.assertTrue(isinstance(block.steps[0].steps[0], Loopers.Serial))
+            self.assertTrue(isinstance(block.steps[0].steps[0], Serial))
     def test_parallel_invalid_max_workers(self):
         with open('TestFiles/GeneratorLooper_test/test_parallel_invalid_max_workers/script.yaml') as f:
             data = yaml.load(f, Loader=SafeLineLoader)

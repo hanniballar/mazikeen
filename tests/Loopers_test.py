@@ -1,8 +1,8 @@
 import unittest
 import time
 from concurrent.futures import ThreadPoolExecutor
-from ConsolePrinter import Printer, BufferedPrinter
-from Loopers import Serial, Parallel
+from mazikeen.ConsolePrinter import Printer, BufferedPrinter
+from mazikeen.Loopers import Serial, Parallel
 
 class SerialTest(unittest.TestCase):
     def test_basic(self):

@@ -29,7 +29,7 @@ def replaceVariables(line, dictReplVar, printer = Printer()):
 
 def ensure_dir(file_path):
     directory = os.path.dirname(file_path)
-    if not os.path.exists(directory):
+    if (directory) and (not os.path.exists(directory)):
         os.makedirs(directory)
 
 def rmtree(path, printer = Printer()):
@@ -64,8 +64,8 @@ def __getCompareLine(line, fh, compiledIgnoreLines):
         for ignoreLine in compiledIgnoreLines:
             if ignoreLine.match(line):
                 line = fh.readline()
-                repeate = True;
-                break;
+                repeate = True
+                break
     return line
     
 def diffFiles(fileL, fileR, compiledIgnoreLines = [], binaryCompare = False):
@@ -75,7 +75,7 @@ def diffFiles(fileL, fileR, compiledIgnoreLines = [], binaryCompare = False):
             while True:
                 lineL = fhL.readline()
                 lineR = fhR.readline()
-                if (not lineL and not lineR): break;
+                if (not lineL and not lineR): break
                 if lineL != lineR:
                     lineL = __getCompareLine(lineL, fhL, compiledIgnoreLines)
                     lineR = __getCompareLine(lineR, fhR, compiledIgnoreLines)
@@ -89,13 +89,13 @@ def diff(pathL, pathR, binaryCompare = False, diffStrategy = diffStrategy.All, i
     compiledIgnoreLines = list(map(lambda x: re.compile(x), ignoreLines))
     if (rootM.is_file() and rootS.is_file()):
         if (not diffFiles(rootM, rootS, compiledIgnoreLines = compiledIgnoreLines, binaryCompare = binaryCompare)):
-            printer.print(f"diff failed: '{rootM}' != '{rootS}'")
+            printer.error(f"diff failed: '{rootM}' != '{rootS}'")
             return False
         return True
 
     for file in [rootM, rootS]:
         if not file.exists():
-            printer.print(f"diff failed: '{file}' doesn't exist")
+            printer.error(f"diff failed: '{file}' doesn't exist")
             return False
 
     filesM = set(__listAllFilesWithoutRoot(pathL))
@@ -108,25 +108,25 @@ def diff(pathL, pathR, binaryCompare = False, diffStrategy = diffStrategy.All, i
     
     if diffStrategy != diffStrategy.IgnoreOrphans:
         for file in (filesM - filesS):
-            printer.print(f"diff failed: '{str(rootM/file)}' not in '{rootS / file.parent}'")
+            printer.error(f"diff failed: '{str(rootM/file)}' not in '{rootS / file.parent}'")
             return False
     
     if diffStrategy == diffStrategy.All:
         for file in (filesS - filesM):
-            printer.print(f"diff failed: '{str(rootS/file)}' not in '{rootM / file.parent}'")
+            printer.error(f"diff failed: '{str(rootS/file)}' not in '{rootM / file.parent}'")
             return False
     
     comPaths =[(rootM/path, rootS/path) for path in (filesM & filesS)]
     
     for pathM, pathS in comPaths:
         if (pathM.is_file() != pathS.is_file()):
-            printer.print(f"diff failed: '{pathM}' != '{pathS}'")
+            printer.error(f"diff failed: '{pathM}' != '{pathS}'")
             return False
     
 
     comFiles = [(pathM, pathS) for pathM, pathS in comPaths if pathM.is_file()]
     for fileM, fileS in comFiles:
         if (not diffFiles(fileM, fileS, binaryCompare = binaryCompare, compiledIgnoreLines = compiledIgnoreLines)):
-            printer.print(f"diff failed: '{fileM}' != '{fileS}'")
-            return False;
-    return True;
+            printer.error(f"diff failed: '{fileM}' != '{fileS}'")
+            return False
+    return True

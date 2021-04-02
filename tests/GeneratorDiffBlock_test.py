@@ -1,10 +1,10 @@
 import unittest
 import yaml
-from GeneratorUtils import SafeLineLoader
-from GeneratorException import GeneratorException
-from GeneratorLooper import generateSerialBlock
-from DiffBlock import DiffBlock
-from Utils import diffStrategy
+from mazikeen.GeneratorUtils import SafeLineLoader
+from mazikeen.GeneratorException import GeneratorException
+from mazikeen.GeneratorLooper import generateSerialBlock
+from mazikeen.DiffBlock import DiffBlock
+from mazikeen.Utils import diffStrategy
 
 class GeneratorDiffBlock_test(unittest.TestCase):
     def test_basic(self):

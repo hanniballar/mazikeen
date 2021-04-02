@@ -23,7 +23,7 @@ def _parseIgnorelines(data, line, field):
 
 def generateDiffBlock(data):
     if isinstance(data, str):
-        dirs = shlex.split(data);
+        dirs = shlex.split(data)
         if (len(dirs) != 2):
             raise GeneratorException(f"'diff' block not recognized")
         return DiffBlock(leftpath=dirs[0], rightpath=dirs[1] )

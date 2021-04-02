@@ -1,8 +1,9 @@
 import unittest
-from MakedirsBlock import MakedirsBlock
-from ConsolePrinter import Printer
-from Utils import rmtree
 import pathlib
+from mazikeen.MakedirsBlock import MakedirsBlock
+from mazikeen.ConsolePrinter import Printer
+from mazikeen.Utils import rmtree
+
 
 class MakedirsBlockTest(unittest.TestCase):
     def test_basic(self):

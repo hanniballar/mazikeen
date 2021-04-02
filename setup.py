@@ -1,4 +1,5 @@
 import setuptools
+import mazikeen.version
 
 with open("README.rst", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -8,7 +9,7 @@ with open("LICENSE", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="mazikeen",
-    version="1.0.0",
+    version=mazikeen.version.__version__,
     author="Neagă Septimiu",
     author_email="neagas@gmail.com",
     description="Test enviroment for CLI application",
@@ -21,9 +22,12 @@ setuptools.setup(
     license_file = LICENSE,
     license="Unlicense",
     classifiers=[
+        "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: The Unlicense (Unlicense)",
         "Operating System :: OS Independent",
+        "Topic :: Software Development :: Testing",
+        "Topic :: Utilities"
     ],
     packages=["mazikeen"],
     install_requires=["junit_xml", "pyyaml"],

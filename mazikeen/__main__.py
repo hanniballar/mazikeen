@@ -14,9 +14,10 @@ from mazikeen.GeneratorLooper import generateSerialBlock, generateParallelBlock
 from mazikeen.Loopers import Serial, Parallel
 from mazikeen.GeneratorUtils import SafeLineLoader
 from mazikeen.ConsolePrinter import Printer, BufferedPrinter
+from mazikeen.version import __version__
 
 def getScriptFiles(dir, maxLevel=2):
-    curLevel = 0;
+    curLevel = 0
     curLevelDirs = [Path(dir)]
     scriptFiles = []
     while(curLevelDirs and (curLevel <= maxLevel)):
@@ -84,6 +85,7 @@ def parseArguments():
                          help='Specifies the number of jobs to run simultaneously')
     parser.add_argument('-r', '--report', dest='reportfile', type=pathlib.Path,
                          help='Create junit test report')
+    parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
 
     return parser.parse_args()
 
@@ -157,7 +159,7 @@ class TestExecuter:
                 block = generateSerialBlock(data)
                 res = block.run(workingDir = str(PurePath(self.testCase.file).parent), printer = printer)
                 if (not res):
-                    self.testCase.add_failure_info(printer.errorOutput)
+                    self.testCase.add_failure_info(printer.errorOutput or "failed")
         except Exception as e:
             self.testCase.add_error_info(str(e))
             printer.print(str(e))
@@ -175,7 +177,7 @@ class TestExecuter:
         return testResStr == "PASSED"
 
 def main():
-    args = parseArguments();
+    args = parseArguments()
     scriptFiles = getScriptFiles(args.start)
     testSuits = createTestSuits(scriptFiles, args.start)
     markTestSkipedByPattern(testSuits, args.pattern)
