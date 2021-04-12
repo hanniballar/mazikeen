@@ -20,11 +20,11 @@ class RunBlock:
         printer.verbose("call:", replCmd)
         inputfileData = None
         if self.inputfile:
-            with open(pathlib.PurePath(workingDir).joinpath(self.inputfile), "rb") as fh:
+            with open(pathlib.PurePath(workingDir).joinpath(replaceVariables(self.inputfile, variables)), "rb") as fh:
                 inputfileData = fh.read()
-        subProcessRes = subprocess.run(cmdNArgs, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, input=inputfileData, cwd = workingDir)
+        subProcessRes = subprocess.run(cmdNArgs, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, input=inputfileData, cwd = workingDir, shell = False)
         if self.outputfile:
-            outputfileFullPath = str(pathlib.PurePath(workingDir).joinpath(self.outputfile))
+            outputfileFullPath = str(pathlib.PurePath(workingDir).joinpath(replaceVariables(self.outputfile, variables)))
             ensure_dir(outputfileFullPath)
             with open(outputfileFullPath, "wb") as fh:
                 fh.write(subProcessRes.stdout)

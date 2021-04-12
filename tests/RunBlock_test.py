@@ -8,7 +8,7 @@ from mazikeen.Utils import rmtree
 
 class RunBlockTest(unittest.TestCase):
     def test_basic(self):
-        cmdExe = RunBlock('echo "Hello World"')
+        cmdExe = RunBlock(r"python -c \"print('Hello World')\"")
         res = cmdExe.run()
         self.assertEqual(res, True)
         
@@ -16,7 +16,7 @@ class RunBlockTest(unittest.TestCase):
         capturedOutput = io.StringIO()
         sys.stdout = capturedOutput
         printer = Printer(verbose = True)
-        cmdString = 'echo "Hello World"'
+        cmdString = r"python -c \"print('Hello World')\""
         cmdExe = RunBlock(cmdString)
         res = cmdExe.run(printer = printer)
         sys.stdout = sys.__stdout__
@@ -53,6 +53,22 @@ class RunBlockTest(unittest.TestCase):
         self.assertEqual(res, True)
         with open("TestFiles/RunBlock_test/stdinTostdout.py", "r") as fh1:
             with open("TestFiles/RunBlock_test/Output/inputfileNoutputfile.txt", "r") as fh2:
+                self.assertEqual(fh1.read(), fh2.read())
+        rmtree("TestFiles/RunBlock_test/Output")
+    def test_variables(self):
+        rmtree("Output")
+        printer = Printer(verbose = True)
+        
+        capturedOutput = io.StringIO()
+        sys.stdout = capturedOutput
+        
+        cmdExe = RunBlock('"' + sys.executable + '"' + " RunBlock_test/stdinTostdout.py", inputfile="RunBlock_test/${var}.py", outputfile="RunBlock_test/Output/${var}Test.txt")
+        res = cmdExe.run(workingDir = "TestFiles",printer = printer, variables = {'var':'stdinTostdout'})
+        sys.stdout = sys.__stdout__
+        
+        self.assertEqual(res, True)
+        with open("TestFiles/RunBlock_test/stdinTostdout.py", "r") as fh1:
+            with open("TestFiles/RunBlock_test/Output/stdinTostdoutTest.txt", "r") as fh2:
                 self.assertEqual(fh1.read(), fh2.read())
         rmtree("TestFiles/RunBlock_test/Output")
 

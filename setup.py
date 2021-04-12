@@ -30,6 +30,6 @@ setuptools.setup(
         "Topic :: Utilities"
     ],
     packages=["mazikeen"],
-    install_requires=["junit_xml", "pyyaml"],
+    install_requires=["junit_xml>=1.8", "pyyaml>=5.4.1"],
     entry_points={"console_scripts": ["mazikeen=mazikeen.__main__:main"]},
 )

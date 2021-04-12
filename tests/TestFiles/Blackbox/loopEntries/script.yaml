@@ -1,0 +1,13 @@
+---
+entries:
+  product:
+    Var:
+      - 1
+      - 2
+steps:
+  - rmdir: Output/${Var}
+  - makedirs: Output/${Var}
+  - run: 
+      cmd: python -c "print(\"Hello World ${Var}\")"
+      outputfile: Output/${Var}/hello${Var}.txt
+  - diff: Output/${Var}/hello${Var}.txt Expected/${Var}/hello${Var}.txt
