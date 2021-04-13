@@ -13,7 +13,7 @@ def replaceVariables(line, dictReplVar, printer = Printer()):
     if line == None: return (True, line)
     searchStart = 0
     while (True):
-        m = re.search(r'(?<!\\)\${.*?}', line[searchStart:])
+        m = re.search(r'(?<!\\)\${.*?}', line[searchStart:]) #SeNe optimize
         if not m: 
             break
         foundVar = m.group()[2:-1]
@@ -101,7 +101,6 @@ def diff(pathL, pathR, binaryCompare = False, diffStrategy = diffStrategy.All, i
     filesM = set(__listAllFilesWithoutRoot(pathL))
     filesS = set(__listAllFilesWithoutRoot(pathR))
     
-    
     if diffStrategy == diffStrategy.IgnoreLeftOrphans:
         filesM, filesS = filesS, filesS
         rootM, rootS = rootS, rootM
@@ -130,3 +129,4 @@ def diff(pathL, pathR, binaryCompare = False, diffStrategy = diffStrategy.All, i
             printer.error(f"diff failed: '{fileM}' != '{fileS}'")
             return False
     return True
+

@@ -1,4 +1,4 @@
 ---
 version: 1.0.0
 steps:
-  - run: exit 1
+  - run: python wait.py

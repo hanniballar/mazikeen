@@ -7,9 +7,11 @@ import argparse
 import multiprocessing
 import copy
 import re
-from pathlib import Path, PurePath
-from junit_xml import TestSuite, TestCase, to_xml_report_file
 
+from pathlib import Path, PurePath
+from junit_xml import TestSuite, TestCase
+
+import SignalHandler as SignalHandler
 from mazikeen.GeneratorLooper import generateSerialBlock, generateParallelBlock
 from mazikeen.Loopers import Serial, Parallel
 from mazikeen.GeneratorUtils import SafeLineLoader
@@ -177,6 +179,7 @@ class TestExecuter:
         return testResStr == "PASSED"
 
 def main():
+    SignalHandler.init()
     args = parseArguments()
     scriptFiles = getScriptFiles(args.start)
     testSuits = createTestSuits(scriptFiles, args.start)
@@ -191,15 +194,18 @@ def main():
     res = runner.run(".", printer= Printer(args.verbose != None))
     processTime = time.process_time() - processStartTime
     executionTime = time.time() - startTime
-    if args.failfast and res == False: 
+    if (args.failfast and res == False) or SignalHandler.failFast(): 
         for ts in testSuits: 
             for tc in ts.test_cases:
                 if tc.elapsed_sec == None:
-                    tc.add_skipped_info("skipped because of --failfast argumet")
+                    if (SignalHandler.failFast()):
+                        tc.add_skipped_info("skipped due to " + SignalHandler.signalName())
+                    else:
+                        tc.add_skipped_info("skipped due to --failfast argument")
     printConsoleReport(testSuits, processTime, executionTime, Printer(args.verbose != None))
     if (args.reportfile):
         with open(args.reportfile, "w") as fw:
-            to_xml_report_file(fw, testSuits)
+            fw.write(TestSuite.to_xml_string(testSuits))
     exit(not res)
     
 if __name__ == '__main__':

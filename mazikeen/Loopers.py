@@ -2,6 +2,7 @@ from concurrent.futures import ThreadPoolExecutor
 import multiprocessing
 import threading
 
+import mazikeen.SignalHandler as SignalHandler
 from mazikeen.ConsolePrinter import Printer, BufferedPrinter
 
 class Looper:
@@ -17,7 +18,11 @@ class Serial(Looper):
     def _runEntry(self, workingDir, variables, printer):
         res = True
         for executor in self.steps:
-            if not executor.run(workingDir = workingDir, variables = variables, printer = printer):
+            executorRes = executor.run(workingDir = workingDir, variables = variables, printer = printer)
+            if (SignalHandler.failFast()): 
+                printer.error(SignalHandler.signalName() + " received.")
+                return False
+            if (executorRes == False):
                 if (self.failfast): return False
                 else: res = False
         return res
@@ -26,6 +31,9 @@ class Serial(Looper):
         res = True
         if self.entries:
             for loopEntry in self.entries:
+                if (SignalHandler.failFast()): 
+                    printer.error(SignalHandler.signalName() + " received.")
+                    return False
                 callVariables = variables.copy()
                 callVariables.update(loopEntry)
                 if (not self._runEntry(workingDir, callVariables, printer)): 
@@ -48,6 +56,9 @@ class Parallel(Looper):
         if overridePrinter:
             printer = printer.getBufferedPrinter()
         res = step.run(workingDir = workingDir, variables = variables, printer = printer)
+        if (SignalHandler.failFast()): 
+            printer.error(SignalHandler.signalName() + " received.")
+            res = False
         if overridePrinter: 
             printer.flush() #step printer was created so that messages are not mixed up
         if res == False and self.foundFailure == False:
@@ -60,7 +71,7 @@ class Parallel(Looper):
     def _runEntry(self, poolExecutor, workingDir, variables, printer):
         for step in self.steps:
             with self.addFutureLock:
-                if (self.foundFailure and self.failfast): return
+                if ((self.foundFailure and self.failfast) or SignalHandler.failFast()): return
                 self.listFutures.append(poolExecutor.submit(self._runStep, step, workingDir = workingDir, variables = variables, printer = printer))
     
     def run(self, workingDir = "", variables = {}, printer = Printer()):
