@@ -126,32 +126,33 @@ def printConsoleReport(testSuits, processTime, executionTime, printer):
         printer.print("Skipped:")
         for ts in testSuits:
             for tc in ts.test_cases:
-                if tc.is_skipped(): print("\t"+ts.name+":"+tc.name)
+                if tc.is_skipped(): print("\t"+ts.name+("/" if ts.name != "" else "")+tc.name)
 
     if (tcError > 0):
         printer.print("----------------------------------------------------------------")
         printer.print("Error:")
         for ts in testSuits:
             for tc in ts.test_cases:
-                if tc.is_error(): print("\t"+ts.name+":"+tc.name)
+                if tc.is_error(): print("\t"+ts.name+("/" if ts.name != "" else "")+tc.name)
 
     if (tcFailed > 0):
         printer.print("----------------------------------------------------------------")
         printer.print("Failed:")
         for ts in testSuits:
             for tc in ts.test_cases:
-                if tc.is_failure(): print("\t"+ts.name+":"+tc.name)
+                if tc.is_failure(): print("\t"+ts.name+("/" if ts.name != "" else "") +tc.name)
 
     printer.print("----------------------------------------------------------------")
     printer.print("process time:",  '%.2f' % processTime, "execution time:",  '%.2f' % executionTime)
 
 class TestExecuter:
-    def __init__(self, testCase):
+    def __init__(self, testSuite, testCase):
+        self.testSuite = testSuite
         self.testCase = testCase
 
     def run(self, workingDir, variables = {}, printer = Printer()):
         curDir = os.getcwd()
-        printer.print("["+"RUN".ljust(10) + "] ---", self.testCase.name)
+        printer.print("["+"RUN".ljust(10) + "] ---", self.testSuite.name + ("/" if self.testSuite.name != "" else "") + self.testCase.name)
         try:
             startTime = time.time()
             processStartTime = time.process_time()
@@ -172,7 +173,7 @@ class TestExecuter:
                 testResStr = "ERROR"
             elif self.testCase.is_failure(): 
                 testResStr = "FAILED"
-            printStr = "["+testResStr.rjust(10) + "] --- " + self.testCase.name
+            printStr = "["+testResStr.rjust(10) + "] --- " + self.testSuite.name + ("/" if self.testSuite.name != "" else "") + self.testCase.name
             if (printer.isVerbose()): 
                 printStr += " --- process time: "+  '%.2f' % (time.process_time() - processStartTime) + " execution time: "+  '%.2f' % (time.time() - startTime)
             printer.print(printStr)
@@ -184,7 +185,7 @@ def main():
     scriptFiles = getScriptFiles(args.start)
     testSuits = createTestSuits(scriptFiles, args.start)
     markTestSkipedByPattern(testSuits, args.pattern)
-    genTestExecuter = [TestExecuter(tc) for ts in testSuits for tc in ts.test_cases if not tc.is_skipped()]
+    genTestExecuter = [TestExecuter(ts, tc) for ts in testSuits for tc in ts.test_cases if not tc.is_skipped()]
     if (args.jobs == None): 
         runner = Serial(genTestExecuter, failfast=args.failfast)
     else: 
