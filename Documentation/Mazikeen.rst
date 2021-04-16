@@ -1,4 +1,4 @@
-`mazikeen` framework is designed for Command Line Applications. It's main feature is that every test has it's own directory.
+`mazikeen` framework is designed for command line applications. It's main feature is that every test has it's own directory.
 `mazikeen` empathise parralel testing.
 
 The test structure looks like:
@@ -66,4 +66,4 @@ Arguments
 							
 script.yaml
 -----------
-For full documentation, please see https://github.com/hanniballar/mazikeen/blob/master/Documentation/script.yaml_1.0.0.rst.
+For full documentation, please see https://github.com/hanniballar/mazikeen/blob/master/Documentation/script.yaml.rst.

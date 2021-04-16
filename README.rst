@@ -49,7 +49,7 @@ Features
 Documentation
 -------------
 
-For full documentation, please see https://github.com/hanniballar/mazikeen/blob/master/Documentation/Mazikeen_1.0.0.rst.
+For full documentation, please see https://github.com/hanniballar/mazikeen/blob/master/Documentation/Mazikeen.rst .
 
 
 Bugs/Requests

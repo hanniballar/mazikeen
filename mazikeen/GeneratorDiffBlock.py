@@ -18,21 +18,27 @@ def _parseIgnorelines(data, line, field):
     listIgnorelines = getYamlList(data, line, field)
     for ignoreline in listIgnorelines:
         if (not isinstance(ignoreline, str)):
-            raise GeneratorException(f"Field '{field}' expects a list of strings {line}")
+            raise GeneratorException(f"Field '{field}' expects a list of strings at line {line}")
     return listIgnorelines
+
+def getYamlPaths(data, line = None, field = None):
+    if isinstance(data, str):
+        dirs = shlex.split(data)
+        if (len(dirs) == 2): 
+            return dirs
+    if (line and field):
+        raise GeneratorException(f"Field '{field}' expects two paths at line {line}")
+    else:
+        raise GeneratorException(f"'diff' block not recognized")
 
 def generateDiffBlock(data):
     if isinstance(data, str):
-        dirs = shlex.split(data)
-        if (len(dirs) != 2):
-            raise GeneratorException(f"'diff' block not recognized")
-        return DiffBlock(leftpath=dirs[0], rightpath=dirs[1] )
+        return DiffBlock(paths = getYamlPaths(data))
     if not isinstance(data, dict):
         raise DiffBlock(f"'diff' block not recognized")
     args = {}
     key = ""
-    knownkeys = {'leftpath': lambda _data: getYamlString(_data, data['__line__'], key), 
-                 'rightpath': lambda _data: getYamlString(_data, data['__line__'], key),
+    knownkeys = {'paths': lambda _data: getYamlPaths(_data, data['__line__'], key),
                  'binarycompare': lambda _data: getYamlBool(_data, data['__line__'], key),
                  'strategy': lambda _data: _parseStrategy(_data, data['__line__'], key),
                  'ignorelines': lambda _data: _parseIgnorelines(_data, data['__line__'], key)}

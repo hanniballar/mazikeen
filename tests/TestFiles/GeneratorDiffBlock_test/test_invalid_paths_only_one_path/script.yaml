@@ -1,9 +1,9 @@
 ---
 steps:
   - diff: 
-      paths: output/leftpath output/rightpath
+      paths: output/leftpath
       binarycompare: True
-      strategy: IgnoreLeftOrphanss
+      strategy: IgnoreLeftOrphans
       ignorelines: 
         - 'Time:'
       

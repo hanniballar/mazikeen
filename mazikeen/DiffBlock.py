@@ -5,16 +5,16 @@ from mazikeen.ConsolePrinter import Printer, BufferedPrinter
 
 
 class DiffBlock:
-    def __init__(self, leftpath, rightpath, binarycompare  = False, strategy = diffStrategy.All, ignorelines = []):
-        self.leftpath = leftpath
-        self.rightpath = rightpath
+    def __init__(self, paths, binarycompare  = False, strategy = diffStrategy.All, ignorelines = []):
+        assert len(paths) == 2
+        self.paths = paths
         self.binarycompare = binarycompare
         self.strategy = strategy
         self.ignorelines = ignorelines
 
     def run(self, workingDir ="", variables = {}, printer = Printer()):
-        _leftpath = replaceVariables(self.leftpath, variables, printer)
-        _rightpath = replaceVariables(self.rightpath, variables, printer)
+        _leftpath = replaceVariables(self.paths[0], variables, printer)
+        _rightpath = replaceVariables(self.paths[1], variables, printer)
         _ignorelines = []
         for ignoreLine in self.ignorelines:
             _ignoreline = replaceVariables(ignoreLine, variables, printer)

@@ -1,8 +1,7 @@
 ---
 steps:
   - diff: 
-      leftpath: output/leftpath
-      rightpath: output/rightpath
+      paths: output/leftpath output/rightpath
       binarycompare: True
       strategy: IgnoreLeftOrphans
       ignorelines: 

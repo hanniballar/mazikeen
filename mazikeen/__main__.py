@@ -11,7 +11,7 @@ import re
 from pathlib import Path, PurePath
 from junit_xml import TestSuite, TestCase
 
-import SignalHandler as SignalHandler
+import mazikeen.SignalHandler as SignalHandler
 from mazikeen.GeneratorLooper import generateSerialBlock, generateParallelBlock
 from mazikeen.Loopers import Serial, Parallel
 from mazikeen.GeneratorUtils import SafeLineLoader
@@ -66,7 +66,7 @@ def upgradeTestScriptData(_data):
     for key in data:
         if key == "version":
             (major, minor, patch) = data[key].split('.')
-            if cmpVersion((major, minor, patch), (1,0,0)) > 0:
+            if cmpVersion((major, minor, patch), (1,1,0)) != 0:
                 raise Exception("Script version "+ str(data[key]) + " not suported")
             data.pop(key)
             break

@@ -13,7 +13,7 @@ Example:
 
 .. code-block:: yaml
 
-version: 1.0.0
+version: 1.1.0
 
 serial
 ----------
@@ -63,7 +63,7 @@ serial block example:
 .. code-block:: yaml
 
   ---
-  version: 1.0.0
+  version: 1.1.0
   entries:
   product:
     shape:
@@ -86,7 +86,7 @@ parallel block example:
 .. code-block:: yaml
 
   ---
-  version: 1.0.0
+  version: 1.1.0
   steps:
     - rmdir: Output
     - makedirs: Output
@@ -111,10 +111,8 @@ Will compare files and directories.
 
 It has following attributes:
 
-- leftPath [`path`]
-   left path required for diff command
-- rightPath [`path`]
-   right path required for diff command
+- paths [`leftpath` `rightpath`]
+    left path and right path required for diff command
 - binarycompare [ `True` | `False` ]
    Perform binary compare. Default `False`
 - strategy [ `IgnoreLeftOrphans` | `IgnoreRightOrphans` | `IgnoreOrphans` | `All` ]
@@ -126,19 +124,27 @@ diff block example:
 .. code-block:: yaml
 
   ---
-  version: 1.0.0
+  version: 1.1.0
   steps:
     - diff: 
-        leftpath: output/leftpath
-        rightpath: output/rightpath
+        paths: output/leftpath output/rightpath
         binarycompare: True
         strategy: IgnoreLeftOrphans
         ignorelines: 
           - 'Time:'
-        
+
+diff block short version:
+
+.. code-block:: yaml
+
+  ---
+  version: 1.1.0
+  steps:
+    - diff: output/leftpath output/rightpath
+
 run
 ----------
-Will execute shell commands
+Will execute shell commands.
 It has following attributes:
 
 - cmd [`shell command`]
@@ -161,6 +167,14 @@ run block example:
         inputFile: input/inp.txt
         outputFile: output/out.txt
         exitCode: 0
+
+run block short version:
+
+.. code-block:: yaml
+
+  ---
+  steps:
+    - run: echo $shapes $color
 
 makedirs
 ----------
