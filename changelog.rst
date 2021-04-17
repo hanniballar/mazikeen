@@ -6,6 +6,7 @@ For a complete changelog, see:
 1.0.2
 -----
 * Run block replaces variables for attributes 'outputfile' and 'inputfile'
+* Run block without defined, or None exitcode will ignore exit code.
 
 1.0.1
 -----

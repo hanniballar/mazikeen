@@ -7,7 +7,7 @@ from mazikeen.ConsolePrinter import Printer
 from mazikeen.Utils import replaceVariables, ensure_dir
 
 class RunBlock:
-    def __init__(self, cmd, outputfile = None, inputfile = None, exitcode = 0):
+    def __init__(self, cmd, outputfile = None, inputfile = None, exitcode = None):
         self.cmd = cmd
         self.outputfile = outputfile
         self.inputfile = inputfile
@@ -28,9 +28,11 @@ class RunBlock:
             ensure_dir(outputfileFullPath)
             with open(outputfileFullPath, "wb") as fh:
                 fh.write(subProcessRes.stdout)
-           
-        res = subProcessRes.returncode == self.exitcode
-        if not res:
-            printer.error("different exitcode received:", subProcessRes.returncode, "!=", self.exitcode, "for command '"+ str(replCmd) +"'")
+        
+        res = True
+        if (self.exitcode != None):
+            res = subProcessRes.returncode == self.exitcode
+            if not res:
+                printer.error("different exitcode received:", subProcessRes.returncode, "!=", self.exitcode, "for command '"+ str(replCmd) +"'")
         return res
      

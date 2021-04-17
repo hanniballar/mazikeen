@@ -19,6 +19,16 @@ def getYamlInt(data, line, field):
 
     return data
 
+def getYamlIntOrNone(data, line, field):
+    if isinstance(data, str):
+        if data.lower() == "none": return None
+    if (not isinstance(data, int)):
+        if (isinstance(data, dict)):
+            raise GeneratorException(f"field '{field}' expects an integer at line {data['__line__']}")
+        raise GeneratorException(f"field '{field}' expects an integer at line {line}")
+
+    return data
+
 def getYamlBool(data, line, field):
     if (not isinstance(data, bool)):
         if (isinstance(data, dict)):

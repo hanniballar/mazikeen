@@ -11,19 +11,31 @@ class GeneratorRunBlock_test(unittest.TestCase):
             data = yaml.load(f, Loader=SafeLineLoader)
             block = generateSerialBlock(data)
             self.assertTrue(isinstance(block.steps[0], RunBlock))
+            self.assertEqual(block.steps[0].cmd, "echo $shapes $color")
             self.assertEqual(block.steps[0].exitcode, 0)
             self.assertEqual(block.steps[0].inputfile, 'input/inp.txt')
             self.assertEqual(block.steps[0].outputfile, 'output/out.txt')
 
-    def test_basic_simple(self):
-        with open('TestFiles/GeneratorRunBlock_test/test_basic_simple/script.yaml') as f:
+    def test_simple(self):
+        with open('TestFiles/GeneratorRunBlock_test/test_simple/script.yaml') as f:
             data = yaml.load(f, Loader=SafeLineLoader)
             block = generateSerialBlock(data)
             self.assertTrue(isinstance(block.steps[0], RunBlock))
-            self.assertEqual(block.steps[0].exitcode, 0)
+            self.assertEqual(block.steps[0].cmd, "echo $shapes $color")
+            self.assertEqual(block.steps[0].exitcode, None)
             self.assertEqual(block.steps[0].inputfile, None)
             self.assertEqual(block.steps[0].outputfile, None)
 
+    def test_exitCode_None(self):
+        with open('TestFiles/GeneratorRunBlock_test/test_exitCode_None/script.yaml') as f:
+            data = yaml.load(f, Loader=SafeLineLoader)
+            block = generateSerialBlock(data)
+            self.assertTrue(isinstance(block.steps[0], RunBlock))
+            self.assertEqual(block.steps[0].cmd, "echo $shapes $color")
+            self.assertEqual(block.steps[0].exitcode, None)
+            self.assertEqual(block.steps[0].inputfile, None)
+            self.assertEqual(block.steps[0].outputfile, None)
+            
     def test_invalid_commad(self):
         with open('TestFiles/GeneratorRunBlock_test/test_invalid_commad/script.yaml') as f:
             data = yaml.load(f, Loader=SafeLineLoader)

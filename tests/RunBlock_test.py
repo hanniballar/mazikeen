@@ -30,12 +30,26 @@ class RunBlockTest(unittest.TestCase):
         capturedOutput = io.StringIO()
         sys.stdout = capturedOutput
         cmdString = '"' + sys.executable + '"'  + ' -c "exit(1)"'
-        cmdExe = RunBlock(cmdString)
+        cmdExe = RunBlock(cmdString, exitcode = 0)
         res = cmdExe.run(printer = printer)
         sys.stdout = sys.__stdout__
         expectedResult = "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n" + 'Error: different exitcode received: 1 != 0 for command \'' + cmdString + "\'\n"
         
         self.assertEqual(res, False)
+        resStr = capturedOutput.getvalue()
+        self.assertEqual(expectedResult, capturedOutput.getvalue())
+        
+    def test_exitCodeNone(self):
+        printer = Printer(verbose = True)
+        capturedOutput = io.StringIO()
+        sys.stdout = capturedOutput
+        cmdString = '"' + sys.executable + '"'  + ' -c "exit(1)"'
+        cmdExe = RunBlock(cmdString)
+        res = cmdExe.run(printer = printer)
+        sys.stdout = sys.__stdout__
+        expectedResult = "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n"
+        
+        self.assertEqual(res, True)
         resStr = capturedOutput.getvalue()
         self.assertEqual(expectedResult, capturedOutput.getvalue())
         

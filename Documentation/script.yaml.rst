@@ -8,6 +8,9 @@ Blocks
 version
 ----------
 Indicates the version of script.yaml.
+For a summarized script.yaml change log please see: https://github.com/hanniballar/mazikeen/blob/master/Documentation/changelog_script.yaml.rst.
+
+
 
 Example:
 
@@ -153,8 +156,8 @@ It has following attributes:
    The content of the `inputFile` will be sent to shell commands `stdin`
 - outputFile [`path`]
    Shell commands stdout will the saved in outputFile
-- exitcode
-   Checks that shell commands exitcode matches this exitcode
+- exitcode [`exitcode`]
+   Checks that shell commands exitcode matches this exitcode. If not defined or `None` exitcode will be ignored
    
 run block example:
 

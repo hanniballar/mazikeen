@@ -1,0 +1,5 @@
+---
+steps:
+  - run: 
+      cmd: echo $shapes $color
+      exitcode: None
