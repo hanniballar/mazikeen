@@ -14,6 +14,7 @@ class RunBlock:
         self.exitcode = exitcode
 
     def run(self, workingDir = ".", variables = {}, printer = Printer()):
+        printer.verbose("Run:", self.cmd)
         replCmd = replaceVariables(self.cmd, variables)
         cmdNArgs = shlex.split(replCmd)
         printer.verbose("cwd:", os.getcwd())

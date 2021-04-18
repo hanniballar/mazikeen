@@ -20,7 +20,7 @@ class RunBlockTest(unittest.TestCase):
         cmdExe = RunBlock(cmdString)
         res = cmdExe.run(printer = printer)
         sys.stdout = sys.__stdout__
-        expectedResult = "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n"
+        expectedResult = 'Run: python -c \\"print(\'Hello World\')\\"' + "\n" + "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n"
         
         self.assertEqual(res, True)
         self.assertEqual(expectedResult, capturedOutput.getvalue())
@@ -33,7 +33,7 @@ class RunBlockTest(unittest.TestCase):
         cmdExe = RunBlock(cmdString, exitcode = 0)
         res = cmdExe.run(printer = printer)
         sys.stdout = sys.__stdout__
-        expectedResult = "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n" + 'Error: different exitcode received: 1 != 0 for command \'' + cmdString + "\'\n"
+        expectedResult = 'Run: ' + cmdString + "\n" + "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n" + 'Error: different exitcode received: 1 != 0 for command \'' + cmdString + "\'\n"
         
         self.assertEqual(res, False)
         resStr = capturedOutput.getvalue()
@@ -47,7 +47,7 @@ class RunBlockTest(unittest.TestCase):
         cmdExe = RunBlock(cmdString)
         res = cmdExe.run(printer = printer)
         sys.stdout = sys.__stdout__
-        expectedResult = "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n"
+        expectedResult ='Run: ' + cmdString + "\n" + "cwd: " + os.getcwd() + "\n" + 'call: '+ cmdString + "\n"
         
         self.assertEqual(res, True)
         resStr = capturedOutput.getvalue()

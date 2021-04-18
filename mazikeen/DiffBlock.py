@@ -13,6 +13,7 @@ class DiffBlock:
         self.ignorelines = ignorelines
 
     def run(self, workingDir ="", variables = {}, printer = Printer()):
+        printer.verbose("Diff:", self.paths)
         _leftpath = replaceVariables(self.paths[0], variables, printer)
         _rightpath = replaceVariables(self.paths[1], variables, printer)
         _ignorelines = []

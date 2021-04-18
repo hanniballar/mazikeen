@@ -8,5 +8,6 @@ class RmdirBlock:
         self.dir = dir
 
     def run(self, workingDir = "", variables = {}, printer = Printer()):
+        printer.verbose("Rmdir:", self.dir)
         _dir = replaceVariables(self.dir, variables, printer)
         return rmtree(str(pathlib.PurePath(workingDir).joinpath(_dir)), printer)
