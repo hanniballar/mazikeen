@@ -8,6 +8,7 @@ For a complete changelog, see:
 * Diff block replaced attributes `leftpath` and `rightpath` with paths. Script version 1.1.0 created
 * Run block without defined, or None exitcode will ignore exit code.
 * Add the name of every block as verbose output.
+* All diff files are now treated as binary files. Binarycompare set to `false` will only ignore OS EOL characters.
 
 1.0.2
 -----

@@ -101,6 +101,9 @@ class diff_Test(unittest.TestCase):
 
     def test_IgnoreLine(self):
         self.assertTrue(diff("TestFiles/diff_Test/test_IgnoreLines/cmp1", "TestFiles/diff_Test/test_IgnoreLines/cmp2", ignoreLines = ["ignoreLine1", "ignoreLine2", "ignoreLine3", "ignoreLinePattern.*"]))
+        
+    def test_nonDefaultEncoding(self):
+        self.assertTrue(diff("TestFiles/diff_Test/test_nonDefaultEncoding/cmp1.txt", "TestFiles/diff_Test/test_nonDefaultEncoding/cmp2.txt"))
 
 if __name__ == '__main__':
     unittest.main()
