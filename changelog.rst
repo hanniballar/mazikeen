@@ -3,6 +3,14 @@ For a complete changelog, see:
 
 * https://github.com/hanniballar/mazikeen/commits
 
+1.1.1
+-----
+* SIGBREAK will immediately stop execution
+* Report file path is being created if it doesn't exist
+* Bugfix: some tests cases where executed twice
+* Empty script files no longer generate errors
+* An error code is being return only if there was an error
+
 1.1.0
 -----
 * Diff block replaced attributes `leftpath` and `rightpath` with paths. Script version 1.1.0 created

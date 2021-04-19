@@ -56,6 +56,7 @@ def _parseSteps(data, line):
             steps.append(knownkeys[key.lower()](yamlSteps[key]))
     return steps
 def generateSerialBlock(data):
+    if data == None: return
     args = {}
     knownkeys = {'entries': lambda data: list(_parseEntries(data)),
                  'failfast': lambda _data: getYamlBool(_data, data['__line__'], key),

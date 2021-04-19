@@ -10,7 +10,7 @@ with open("LICENSE", "r", encoding="utf-8") as fh:
 setuptools.setup(
     name="mazikeen",
     version=mazikeen.version.__version__,
-    author="Neagă Septimiu",
+    author="Neaga Septimiu",
     author_email="neagas@gmail.com",
     description="Test enviroment for CLI application",
     long_description=long_description,

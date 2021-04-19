@@ -8,12 +8,13 @@ from enum import Enum
 from mazikeen.ConsolePrinter import Printer
 from mazikeen.GeneratorException import GeneratorException
 
-replaceVariablesExp = re.compile(r'(?<!\\)\${.*?}')
+__replaceVariablesExp = re.compile(r'(?<!\\)\${.*?}')
 def replaceVariables(line, dictReplVar, printer = Printer()):
+    global __replaceVariablesExp
     if line == None: return (True, line)
     searchStart = 0
     while (True):
-        m = re.search(r'(?<!\\)\${.*?}', line[searchStart:]) #ToDo: optimize
+        m = __replaceVariablesExp.search(line[searchStart:])
         if not m: 
             break
         foundVar = m.group()[2:-1]
@@ -81,22 +82,29 @@ def normalizeEOL(line):
     return line
 
 def diffFiles(fileL, fileR, compiledIgnoreLines = [], binaryCompare = False):
+    def areLinesIdentical(lineL, lineR, binaryCompare):
+        def normalizeEOL(line):
+            if len(line) >=2 and line[-2:] == bytes('\r\n', 'utf-8'): 
+                line = line[:-2] + bytes('\n', 'utf-8')
+            elif len(line) >=1 and line[-1] == bytes('\r', 'utf-8'): 
+                line = line[:-1] + bytes('\n', 'utf-8')
+            return line
+
+        if lineL == lineR: return True #This is the most likely scenario so it has priority
+        if binaryCompare == False:
+            return normalizeEOL(lineL) == normalizeEOL(lineR)
+        return False
+
     with open(fileL, "rb") as fhL:
         with open(fileR, "rb") as fhR:
             while True:
                 lineL = fhL.readline()
                 lineR = fhR.readline()
-                if (binaryCompare == False):
-                    lineL = normalizeEOL(lineL)
-                    lineR = normalizeEOL(lineR)
-                if (not lineL and not lineR): break
-                if lineL != lineR:
+                if (not lineL and not lineR): break #EOF reached
+                if areLinesIdentical(lineL, lineR, binaryCompare) == False:
                     lineL = __getCompareLine(lineL, fhL, compiledIgnoreLines)
                     lineR = __getCompareLine(lineR, fhR, compiledIgnoreLines)
-                    if (binaryCompare == False):
-                        lineL = normalizeEOL(lineL)
-                        lineR = normalizeEOL(lineR)
-                    if lineL != lineR:
+                    if areLinesIdentical(lineL, lineR, binaryCompare) == False:
                         return False
     return True
 

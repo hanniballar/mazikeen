@@ -1,4 +1,5 @@
 import os
+import io
 import glob
 import yaml
 import time
@@ -17,15 +18,16 @@ from mazikeen.Loopers import Serial, Parallel
 from mazikeen.GeneratorUtils import SafeLineLoader
 from mazikeen.ConsolePrinter import Printer, BufferedPrinter
 from mazikeen.version import __version__
+from mazikeen.Utils import ensure_dir
 
 def getScriptFiles(dir, maxLevel=2):
     curLevel = 0
     curLevelDirs = [Path(dir)]
     scriptFiles = []
     while(curLevelDirs and (curLevel <= maxLevel)):
-        tmpNextLevelDir = []
         nextLevelDir = []
         for curDir in curLevelDirs:
+            tmpNextLevelDir = []
             dirContent = os.listdir(curDir)
             for curFile in map(lambda path: Path(curDir).joinpath(path),dirContent): 
                 if curFile.is_dir(): 
@@ -54,6 +56,7 @@ def createTestSuits(scriptFiles, root):
     return testSuits
 
 def upgradeTestScriptData(_data):
+    if _data == None: return
     data = _data.copy()
     def cmpVersion(version1, version2):
         for idx in range(max(len(version1), len(version2))):
@@ -106,11 +109,12 @@ def markTestSkipedByPattern(testSuits, pattern):
             if ( (p.match(tc.name) != None) == isNegativePatern):
                 tc.add_skipped_info("skipped because of --pattern argumet")
 
-def printConsoleReport(testSuits, processTime, executionTime, printer):
+def getReport(testSuits, processTime, executionTime):
     tcPassed = 0
     tcSkipped = 0
     tcFailed = 0 
     tcError = 0
+    reportTxt = io.StringIO()
 
     for ts in testSuits:
         for tc in ts.test_cases:
@@ -119,31 +123,33 @@ def printConsoleReport(testSuits, processTime, executionTime, printer):
             elif tc.is_skipped(): tcSkipped += 1
             else: tcPassed += 1
 
-    printer.print("----------------------------------------------------------------")
-    printer.print("Total test cases:", tcPassed + tcSkipped + tcError + tcFailed, "passed:", tcPassed, "skipped:", tcSkipped, "error:", tcError, "failed:", tcFailed)
+    print("----------------------------------------------------------------", file = reportTxt)
+    print("Total test cases:", tcPassed + tcSkipped + tcError + tcFailed, "passed:", tcPassed, "skipped:", tcSkipped, "error:", tcError, "failed:", tcFailed, file = reportTxt)
     if (tcSkipped > 0):
-        printer.print("----------------------------------------------------------------")
-        printer.print("Skipped:")
+        print("----------------------------------------------------------------", file = reportTxt)
+        print("Skipped:", file = reportTxt)
         for ts in testSuits:
             for tc in ts.test_cases:
-                if tc.is_skipped(): print("\t"+ts.name+("/" if ts.name != "" else "")+tc.name)
+                if tc.is_skipped(): print("\t"+ts.name+("/" if ts.name != "" else "")+tc.name, file = reportTxt)
 
     if (tcError > 0):
-        printer.print("----------------------------------------------------------------")
-        printer.print("Error:")
+        print("----------------------------------------------------------------", file = reportTxt)
+        print("Error:", file = reportTxt)
         for ts in testSuits:
             for tc in ts.test_cases:
-                if tc.is_error(): print("\t"+ts.name+("/" if ts.name != "" else "")+tc.name)
+                if tc.is_error(): print("\t"+ts.name+("/" if ts.name != "" else "")+tc.name, file = reportTxt)
 
     if (tcFailed > 0):
-        printer.print("----------------------------------------------------------------")
-        printer.print("Failed:")
+        print("----------------------------------------------------------------", file = reportTxt)
+        print("Failed:", file = reportTxt)
         for ts in testSuits:
             for tc in ts.test_cases:
-                if tc.is_failure(): print("\t"+ts.name+("/" if ts.name != "" else "") +tc.name)
+                if tc.is_failure(): print("\t"+ts.name+("/" if ts.name != "" else "") +tc.name, file = reportTxt)
 
-    printer.print("----------------------------------------------------------------")
-    printer.print("process time:",  '%.2f' % processTime, "execution time:",  '%.2f' % executionTime)
+    print("----------------------------------------------------------------", file = reportTxt)
+    print("process time:",  '%.2f' % processTime, "execution time:",  '%.2f' % executionTime, file = reportTxt)
+
+    return {"text" : reportTxt.getvalue(), "passed" : tcPassed, "skipped" : tcSkipped, "error" : tcError, "failed" : tcFailed }
 
 class TestExecuter:
     def __init__(self, testSuite, testCase):
@@ -160,6 +166,7 @@ class TestExecuter:
                 data = yaml.load(f, Loader=SafeLineLoader)
                 data = upgradeTestScriptData(data)
                 block = generateSerialBlock(data)
+                if block == None: return
                 res = block.run(workingDir = str(PurePath(self.testCase.file).parent), printer = printer)
                 if (not res):
                     self.testCase.add_failure_info(printer.errorOutput or "failed")
@@ -192,7 +199,7 @@ def main():
         runner = Parallel(genTestExecuter, failfast=args.failfast, max_workers = args.jobs)
     startTime = time.time()
     processStartTime = time.process_time()
-    res = runner.run(".", printer= Printer(args.verbose != None))
+    res = runner.run(".", printer = Printer(args.verbose != None))
     processTime = time.process_time() - processStartTime
     executionTime = time.time() - startTime
     if (args.failfast and res == False) or SignalHandler.failFast(): 
@@ -203,11 +210,13 @@ def main():
                         tc.add_skipped_info("skipped due to " + SignalHandler.signalName())
                     else:
                         tc.add_skipped_info("skipped due to --failfast argument")
-    printConsoleReport(testSuits, processTime, executionTime, Printer(args.verbose != None))
+    report = getReport(testSuits, processTime, executionTime)
+    Printer(args.verbose != None).print(report["text"])
     if (args.reportfile):
+        ensure_dir(args.reportfile)
         with open(args.reportfile, "w") as fw:
             fw.write(TestSuite.to_xml_string(testSuits))
-    exit(not res)
+    exit(report["error"] > 0)
     
 if __name__ == '__main__':
     main()

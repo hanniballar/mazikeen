@@ -8,7 +8,6 @@ def failFast():
 
 def init(): 
     signal.signal(signal.SIGINT, signalHandler)
-    signal.signal(signal.SIGBREAK, signalHandler)
 
 def signalName():
     global __signal_received__
