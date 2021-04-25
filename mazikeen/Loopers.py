@@ -1,6 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 import multiprocessing
 import threading
+import time
 
 import mazikeen.SignalHandler as SignalHandler
 from mazikeen.ConsolePrinter import Printer, BufferedPrinter
@@ -56,8 +57,9 @@ class Parallel(Looper):
         if overridePrinter:
             printer = printer.getBufferedPrinter()
         res = step.run(workingDir = workingDir, variables = variables, printer = printer)
-        if (SignalHandler.failFast()): 
+        if (SignalHandler.failFast()):
             printer.error(SignalHandler.signalName() + " received.")
+            for future in self.listFutures: future.cancel()
             res = False
         if overridePrinter: 
             printer.flush() #step printer was created so that messages are not mixed up
@@ -84,7 +86,9 @@ class Parallel(Looper):
                     self._runEntry(poolExecutor, workingDir = workingDir, variables = callVariables, printer = printer)
             else:
                 self._runEntry(poolExecutor, workingDir = workingDir, variables = variables, printer = printer)
-            poolExecutor.shutdown(wait=True)
+            if threading.current_thread().name == 'MainThread':
+                while(poolExecutor._work_queue.qsize()):
+                    time.sleep(0.05)
         for future in self.listFutures:
             if future.cancelled() or future.result() == False: return False
         return True

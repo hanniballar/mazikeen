@@ -3,6 +3,12 @@ For a complete changelog, see:
 
 * https://github.com/hanniballar/mazikeen/commits
 
+1.1.2
+-----
+* Empty `entries` attribute for `serial` or `parallel` no longer yields an error
+* Windows shell commands like `echo` allowed
+* Bugfix: SIGINIT (CTRL-C) will trigger failfast immediately
+
 1.1.1
 -----
 * SIGBREAK will immediately stop execution

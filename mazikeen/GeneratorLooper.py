@@ -29,6 +29,7 @@ def _parseZip(data):
     for curDic in __dict_zip_longest(dictVar):
         yield { k:v for k, v in curDic.items() if v }
 def _parseEntries(data):
+    if data == None: return []
     knownkeys = {'product':_parseProduct, 'zip':_parseZip}
     entries = []
     for key in data:

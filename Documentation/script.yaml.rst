@@ -68,16 +68,18 @@ serial block example:
   ---
   version: 1.1.0
   entries:
-  product:
-    shape:
-      - circle
-      - square
-      - triangle
-    color:
-      - red
-      - yellow
+    product:
+      shape:
+        - circle
+        - square
+        - triangle
+      color:
+        - red
+        - yellow
   steps:
-    - run: echo "shape = ${shape}; color = ${color}"  > out.txt
+    - run:
+        cmd: echo shape = ${shape}; color = ${color}
+        outputfile: out.txt
 
 parallel
 ----------
@@ -105,7 +107,9 @@ parallel block example:
         steps:
           - serial:
               steps:
-                - run: echo "Parallel${idx}" > Output/parallel${idx}
+                - run:
+                    cmd: echo Parallel${idx}
+                    outputfile: Output/parallel${idx}
                 - diff: Output/parallel${idx} Expected/parallel${idx}
 
 diff
