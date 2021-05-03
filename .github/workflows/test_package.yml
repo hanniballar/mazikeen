@@ -3,7 +3,12 @@
 
 name: Test package
 
-on: [push]
+on: 
+  push:
+    branches:
+      - main
+      - develop
+      - test
 
 jobs:
   test_linux:
@@ -12,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ 3.6, 3.7, 3.8]
+        python-version: [ 3.6, 3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -20,20 +25,13 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    # Install pip and pytest
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install unittest-xml-reporting
-        pip install wheel
     - name: Build mazikeen
       run: |
-        python setup.py bdist_wheel
-        pip install dist/*
+        pip install -e ".[testing]"
     - name: Test with unittest
       run: |
         cd tests
-        python -m xmlrunner discover . -p '*_test.py'
+        python -m unittest discover . -p '*_test.py'
 
   test_windows:
     name: Test Windows
@@ -41,7 +39,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: [ 3.6, 3.7, 3.8]
+        python-version: [ 3.6, 3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -49,17 +47,10 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    # Install pip and pytest
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install unittest-xml-reporting
-        pip install wheel
     - name: Build mazikeen
       run: |
-        python setup.py bdist_wheel
-        Get-ChildItem -File dist | Foreach {pip install $_.fullname}
+        pip install -e ".[testing]"
     - name: Test with unittest
       run: |
         cd tests
-        python -m xmlrunner discover . -p '*_test.py'
+        python -m unittest discover . -p '*_test.py'

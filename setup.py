@@ -31,5 +31,10 @@ setuptools.setup(
     ],
     packages=["mazikeen"],
     install_requires=["junit_xml>=1.8", "pyyaml>=5.4.1"],
+    extras_require={
+        'testing': [
+            "xmldiff==2.4"
+        ]
+    },
     entry_points={"console_scripts": ["mazikeen=mazikeen.__main__:main"]},
 )

@@ -1,0 +1,132 @@
+import unittest
+import subprocess
+import os
+import re
+from mazikeen.Utils import diff, rmtree, diffStrategy
+from xmldiff import main
+
+class Blackbox(unittest.TestCase):
+    def test_simple(self):
+        testDir = "TestFiles/Blackbox_test/simple/"
+        outDir = testDir + "TestOutput"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
+        self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignoreLines = ["process time: .*"]))
+        
+
+    def test_inputFileNoutputFile(self):
+        testDir = "TestFiles/Blackbox_test/inputFileNoutputFile/"
+        outDir = testDir + "TestOutput"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
+        self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignoreLines = ["process time: .*"]))
+        
+    def test_blockinBlock(self):
+        testDir = "TestFiles/Blackbox_test/blockinBlock/"
+        outDir = testDir + "TestOutput"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
+        self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignoreLines = ["process time: .*"]))
+        
+    def test_testsuitsNtestcases_simple(self):
+        testDir = "TestFiles/Blackbox_test/testsuitsNtestcases/"
+        outDir = testDir + "TestOutput/simple/"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
+        self.assertTrue(diff(testDir + "TestOutput/simple/mazikenout.txt", testDir + "TestExpected/simple/mazikenout.txt", ignoreLines = ["process time: .*"]))
+        
+    def test_testsuitsNtestcases_report(self):
+        testDir = "TestFiles/Blackbox_test/testsuitsNtestcases/"
+        outDir = testDir + "TestOutput/report"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen", "-r", "TestOutput/report/report.xml"], stdout=of, stderr=of, cwd = testDir)
+        
+        with open(outDir + "/report.xml", "r") as ifile:
+            with open(outDir + "/report_diff.xml", "w") as ofile:
+                for line in ifile:
+                    line = re.sub(r"time=\".+?\"", "time=\"\"", line)
+                    line = re.sub(r"\\", "/", line)
+                    ofile.write(line)
+        self.assertEqual(main.diff_files(testDir + "TestOutput/report/report_diff.xml", testDir + "TestExpected/report/report_diff.xml"), [])
+        
+    def test_testsuitsNtestcases_wait_parallel(self):
+        testDir = "TestFiles/Blackbox_test/testsuitsNtestcases_wait/"
+        outDir = testDir + "TestOutput/parallel/"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen", "-r", "TestOutput/parallel/report.xml", "-j", "2"], stdout=of, stderr=of, cwd = testDir)
+        
+        with open(outDir + "/report.xml", "r") as ifile:
+            with open(outDir + "/report_diff.xml", "w") as ofile:
+                for line in ifile:
+                    line = re.sub(r"time=\".+?\"", "time=\"\"", line)
+                    line = re.sub(r"\\", "/", line)
+                    ofile.write(line)
+        self.assertEqual(main.diff_files(outDir + "/report_diff.xml", outDir + "/report_diff.xml"), [])
+        self.assertTrue(diff(testDir + "TestOutput/parallel/mazikenout.txt", testDir + "TestExpected/parallel/mazikenout.txt", ignoreLines = ["process time: .*"]))
+        
+    def test_testsuitsNtestcases_waitNfail_parallel(self):
+        testDir = "TestFiles/Blackbox_test/testsuitsNtestcases_waitNfail/"
+        outDir = testDir + "TestOutput/parallel/"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen", "-r", "TestOutput/parallel/report.xml", "-j", "2"], stdout=of, stderr=of, cwd = testDir)
+        
+        with open(outDir + "/report.xml", "r") as ifile:
+            with open(outDir + "/report_diff.xml", "w") as ofile:
+                for line in ifile:
+                    line = re.sub(r"time=\".+?\"", "time=\"\"", line)
+                    line = re.sub(r"\\", "/", line)
+                    ofile.write(line)
+        self.assertEqual(main.diff_files(outDir + "/report_diff.xml", outDir + "/report_diff.xml"), [])
+        self.assertTrue(diff(testDir + "TestOutput/parallel/mazikenout.txt", testDir + "TestExpected/parallel/mazikenout.txt", ignoreLines = ["process time: .*"]))
+        
+    def test_testsuitsNtestcases_waitNfail_serial(self):
+        testDir = "TestFiles/Blackbox_test/testsuitsNtestcases_waitNfail/"
+        outDir = testDir + "TestOutput/serial/"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen", "-r", "TestOutput/serial/report.xml", "-j", "2"], stdout=of, stderr=of, cwd = testDir)
+        
+        with open(outDir + "/report.xml", "r") as ifile:
+            with open(outDir + "/report_diff.xml", "w") as ofile:
+                for line in ifile:
+                    line = re.sub(r"time=\".+?\"", "time=\"\"", line)
+                    line = re.sub(r"\\", "/", line)
+                    ofile.write(line)
+        self.assertEqual(main.diff_files(outDir + "/report_diff.xml", outDir + "/report_diff.xml"), [])
+        self.assertTrue(diff(testDir + "TestOutput/serial/mazikenout.txt", testDir + "TestExpected/serial/mazikenout.txt", ignoreLines = ["process time: .*"]))
+
+    def test_testsuitsNtestcases_waitNfail_failFast(self):
+        testDir = "TestFiles/Blackbox_test/testsuitsNtestcases_waitNfail/"
+        outDir = testDir + "TestOutput/failFast/"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen", "-r", "TestOutput/failFast/report.xml", "-j", "2", "--failfast"], stdout=of, stderr=of, cwd = testDir)
+        
+        with open(outDir + "/report.xml", "r") as ifile:
+            with open(outDir + "/report_diff.xml", "w") as ofile:
+                for line in ifile:
+                    line = re.sub(r"time=\".+?\"", "time=\"\"", line)
+                    line = re.sub(r"\\", "/", line)
+                    ofile.write(line)
+        self.assertEqual(main.diff_files(outDir + "/report_diff.xml", outDir + "/report_diff.xml"), [])
+        self.assertTrue(diff(testDir + "TestOutput/failFast/mazikenout.txt", testDir + "TestExpected/failFast/mazikenout.txt", ignoreLines = ["process time: .*"]))
+
+    
+if __name__ == '__main__':
+    unittest.main()

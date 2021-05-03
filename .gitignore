@@ -1,5 +1,6 @@
-/__pycache__
-/.vs
+__pycache__
+.vs
+*.pyproj
 /env
 /build
 /dist

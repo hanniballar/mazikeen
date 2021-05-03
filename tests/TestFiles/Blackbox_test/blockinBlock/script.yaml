@@ -1,0 +1,16 @@
+---
+steps:
+  - rmdir: Output
+  - makedirs: Output
+  - serial:
+      entries:
+        zip:
+          name: 
+            - Septimiu
+            - Mihai
+            - Cristiana
+      steps:
+        - run: 
+            cmd: echo Hello ${name}
+            outputfile: Output/hello_${name}.txt
+  - diff: Output Expected

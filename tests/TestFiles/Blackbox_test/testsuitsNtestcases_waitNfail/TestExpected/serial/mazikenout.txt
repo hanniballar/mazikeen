@@ -1,0 +1,21 @@
+[RUN       ] --- testsuit1/testcase1
+[    PASSED] --- testsuit1/testcase1
+[RUN       ] --- testsuit2/testcase1
+Error: different exitcode received: 0 != 1 for command 'python -c "import time; time.sleep(0.02)"'
+[    FAILED] --- testsuit2/testcase1
+[RUN       ] --- testsuit2/testcase2
+[    PASSED] --- testsuit2/testcase2
+[RUN       ] --- testsuit3/testcase1
+[    PASSED] --- testsuit3/testcase1
+[RUN       ] --- testsuit3/testcase2
+[    PASSED] --- testsuit3/testcase2
+[RUN       ] --- testsuit3/testcase3
+[    PASSED] --- testsuit3/testcase3
+----------------------------------------------------------------
+Total test cases: 6 passed: 5 skipped: 0 error: 0 failed: 1
+----------------------------------------------------------------
+Failed:
+	testsuit2/testcase1
+----------------------------------------------------------------
+process time: 0.05 execution time: 0.23
+

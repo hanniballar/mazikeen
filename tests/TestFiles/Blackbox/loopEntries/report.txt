@@ -1,6 +1,0 @@
-<?xml version="1.0" ?>
-<testsuites disabled="0" errors="0" failures="0" tests="1" time="0.09800028800964355">
-	<testsuite disabled="0" errors="0" failures="0" name="" skipped="0" tests="1" time="0.09800028800964355">
-		<testcase file="script.yaml" name="" time="0.098000"/>
-	</testsuite>
-</testsuites>

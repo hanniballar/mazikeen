@@ -1,8 +1,0 @@
----
-steps:
-  - rmdir: Output
-  - makedirs: Output
-  - run: 
-      cmd: echo Hello World
-      outputfile: Output/hello.txt
-  - diff: Output/hello.txt Expected/hello.txt

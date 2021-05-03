@@ -39,6 +39,7 @@ def getScriptFiles(dir, maxLevel=2):
             nextLevelDir.extend(tmpNextLevelDir)
         curLevelDirs = nextLevelDir
         curLevel += 1
+    scriptFiles.sort()
     return scriptFiles
 
 def createTestSuits(scriptFiles, root):

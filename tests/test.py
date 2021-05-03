@@ -1,11 +1,10 @@
-import shlex
+import unittest
 import subprocess
 import os
-import pathlib
+import re
+from mazikeen.Utils import diff, rmtree, diffStrategy
+from xmldiff import main
+from collections import OrderedDict
 
-replCmd = "echo Hello World"
-cmdNArgs = shlex.split(replCmd)
-inputfileData = None
-workingDir = "."
-
-subProcessRes = subprocess.run(cmdNArgs, cwd = workingDir, shell = True)
+testDir = "TestFiles/Blackbox_test/testsuitsNtestcases/"
+print(main.diff_files(testDir + "TestOutput/report/report_diff.xml", testDir + "TestExpected/report/report_diff.xml"))

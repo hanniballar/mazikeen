@@ -1,0 +1,5 @@
+---
+steps:
+  - run: 
+      cmd: python -c "import time; time.sleep(0.02)"
+      exitcode: 1
