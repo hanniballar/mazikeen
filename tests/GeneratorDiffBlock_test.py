@@ -1,6 +1,6 @@
 import unittest
 import yaml
-from mazikeen.GeneratorUtils import SafeLineLoader
+from mazikeen.ScriptDataProcessor import SafeLineLoader
 from mazikeen.GeneratorException import GeneratorException
 from mazikeen.GeneratorLooper import generateSerialBlock
 from mazikeen.DiffBlock import DiffBlock

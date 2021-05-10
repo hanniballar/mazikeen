@@ -1,6 +1,7 @@
 __pycache__
 .vs
 *.pyproj
+*.sln
 /env
 /build
 /dist

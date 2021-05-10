@@ -1,7 +1,7 @@
 [RUN       ] --- testsuit1/testcase1
 [    PASSED] --- testsuit1/testcase1
 [RUN       ] --- testsuit2/testcase1
-Error: different exitcode received: 0 != 1 for command 'python -c "import time; time.sleep(0.02)"'
+Error: different exitcode received: 0 != 1 for command 'python -c "import time; time.sleep(0.05)"'
 [    FAILED] --- testsuit2/testcase1
 [RUN       ] --- testsuit2/testcase2
 [    PASSED] --- testsuit2/testcase2

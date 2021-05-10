@@ -4,6 +4,7 @@ import os
 import re
 from mazikeen.Utils import diff, rmtree, diffStrategy
 from xmldiff import main
+from distutils.dir_util import copy_tree
 
 class Blackbox(unittest.TestCase):
     def test_simple(self):
@@ -126,6 +127,27 @@ class Blackbox(unittest.TestCase):
                     ofile.write(line)
         self.assertEqual(main.diff_files(outDir + "/report_diff.xml", outDir + "/report_diff.xml"), [])
         self.assertTrue(diff(testDir + "TestOutput/failFast/mazikenout.txt", testDir + "TestExpected/failFast/mazikenout.txt", ignoreLines = ["process time: .*"]))
+        
+    def test_upgradeScriptData1_0_0(self):
+        testDir = "TestFiles/Blackbox_test/upgradeScriptData1.0.0/"
+        outDir = testDir + "TestOutput/"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        copy_tree(testDir+"TestInput", outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen", "--upgradeScriptFile"], stdout=of, stderr=of, cwd = outDir)
+
+        self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignoreLines = ["process time: .*"]))
+        self.assertTrue(diff(testDir + "TestOutput/script.yaml", testDir + "TestExpected/script.yaml"))
+        
+    def test_emptyTest(self):
+        testDir = "TestFiles/Blackbox_test/emptyTest/"
+        outDir = testDir + "TestOutput/"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
+        self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignoreLines = ["process time: .*"]))
 
     
 if __name__ == '__main__':

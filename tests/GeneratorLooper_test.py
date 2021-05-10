@@ -4,7 +4,7 @@ import re
 from mazikeen.Loopers import Serial, Parallel
 from mazikeen.GeneratorLooper import generateSerialBlock, generateParallelBlock
 from mazikeen.GeneratorException import GeneratorException
-from mazikeen.GeneratorUtils import SafeLineLoader
+from mazikeen.ScriptDataProcessor import SafeLineLoader
 
 class GeneratorSerialTest(unittest.TestCase):
     def test_basic(self):

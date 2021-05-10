@@ -2,7 +2,10 @@
 For a complete changelog, see:
 
 * https://github.com/hanniballar/mazikeen/commits
-
+1.1.3
+-----
+* mazikeen can now work also with script.yaml version 1.0.0
+* new command line argument `--upgradeScriptFile`. It updgrades script file from 1.0.0 to 1.1.0
 1.1.2
 -----
 * Empty `entries` attribute for `serial` or `parallel` no longer yields an error

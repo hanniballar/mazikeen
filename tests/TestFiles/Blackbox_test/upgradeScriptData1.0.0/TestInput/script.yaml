@@ -1,0 +1,11 @@
+---
+version: 1.0.0
+steps:
+  - run: echo Dummy text
+  - run:
+      cmd: echo Dummy text
+      outputfile: Output/out.txt
+  - diff:
+      leftpath: Output/out.txt
+      rightpath: Expected/out.txt
+    

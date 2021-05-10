@@ -15,10 +15,10 @@ from junit_xml import TestSuite, TestCase
 import mazikeen.SignalHandler as SignalHandler
 from mazikeen.GeneratorLooper import generateSerialBlock, generateParallelBlock
 from mazikeen.Loopers import Serial, Parallel
-from mazikeen.GeneratorUtils import SafeLineLoader
 from mazikeen.ConsolePrinter import Printer, BufferedPrinter
 from mazikeen.version import __version__
 from mazikeen.Utils import ensure_dir
+from mazikeen.ScriptDataProcessor import processScriptData
 
 def getScriptFiles(dir, maxLevel=2):
     curLevel = 0
@@ -56,26 +56,6 @@ def createTestSuits(scriptFiles, root):
 
     return testSuits
 
-def upgradeTestScriptData(_data):
-    if _data == None: return
-    data = _data.copy()
-    def cmpVersion(version1, version2):
-        for idx in range(max(len(version1), len(version2))):
-            if len(version1) < idx and len(version2) >= idx: return -1
-            elif len(version1) >= idx and len(version2) < idx: return 1
-            elif int(version1[idx]) < int(version2[idx]): return -1
-            elif int(version1[idx]) > int(version2[idx]): return 1
-        return 0
-
-    for key in data:
-        if key == "version":
-            (major, minor, patch) = data[key].split('.')
-            if cmpVersion((major, minor, patch), (1,1,0)) != 0:
-                raise Exception("Script version "+ str(data[key]) + " not suported")
-            data.pop(key)
-            break
-    return data
-
 def parseArguments():
     parser = argparse.ArgumentParser(description='Mazikeen test enviroment')
      
@@ -83,6 +63,8 @@ def parseArguments():
                         help='Only run tests which match pattern. Does support also negative patterns "-PATTERN"')
     parser.add_argument( '-f','--failfast', action='store_true', 
                         help='stop on first faild test as quickly as possible')
+    parser.add_argument( '--upgradeScriptFile', action='store_true', 
+                        help='save upgraded script file. Script files are upgraded if their version is lower that latest version')
     parser.add_argument( '-s','--start-directory', dest='start', type=pathlib.Path, default=".",
                          help="Directory to start discovering tests ('.' default)")
     parser.add_argument('-v', '--verbose', dest='verbose', action='count',
@@ -153,9 +135,10 @@ def getReport(testSuits, processTime, executionTime):
     return {"text" : reportTxt.getvalue(), "passed" : tcPassed, "skipped" : tcSkipped, "error" : tcError, "failed" : tcFailed }
 
 class TestExecuter:
-    def __init__(self, testSuite, testCase):
+    def __init__(self, testSuite, testCase, upgradeScriptFile):
         self.testSuite = testSuite
         self.testCase = testCase
+        self.upgradeScriptFile = upgradeScriptFile
 
     def run(self, workingDir, variables = {}, printer = Printer()):
         curDir = os.getcwd()
@@ -163,14 +146,12 @@ class TestExecuter:
         try:
             startTime = time.time()
             processStartTime = time.process_time()
-            with open(self.testCase.file) as f:
-                data = yaml.load(f, Loader=SafeLineLoader)
-                data = upgradeTestScriptData(data)
-                block = generateSerialBlock(data)
-                if block == None: return
-                res = block.run(workingDir = str(PurePath(self.testCase.file).parent), printer = printer)
-                if (not res):
-                    self.testCase.add_failure_info(printer.errorOutput or "failed")
+            data = processScriptData(self.testCase.file, saveUpgradedScript = self.upgradeScriptFile, printer = printer)
+            block = generateSerialBlock(data)
+            if block == None: return
+            res = block.run(workingDir = str(PurePath(self.testCase.file).parent), printer = printer)
+            if (not res):
+                self.testCase.add_failure_info(printer.errorOutput or "failed")
         except Exception as e:
             self.testCase.add_error_info(str(e))
             printer.print(str(e))
@@ -193,7 +174,7 @@ def main():
     scriptFiles = getScriptFiles(args.start)
     testSuits = createTestSuits(scriptFiles, args.start)
     markTestSkipedByPattern(testSuits, args.pattern)
-    genTestExecuter = [TestExecuter(ts, tc) for ts in testSuits for tc in ts.test_cases if not tc.is_skipped()]
+    genTestExecuter = [TestExecuter(ts, tc, args.upgradeScriptFile) for ts in testSuits for tc in ts.test_cases if not tc.is_skipped()]
     if (args.jobs == None): 
         runner = Serial(genTestExecuter, failfast=args.failfast)
     else: 

@@ -1,7 +1,7 @@
 import unittest
 import yaml
 from mazikeen.GeneratorLooper import generateSerialBlock
-from mazikeen.GeneratorUtils import SafeLineLoader
+from mazikeen.ScriptDataProcessor import SafeLineLoader
 from mazikeen.MakedirsBlock import MakedirsBlock
 from mazikeen.GeneratorException import GeneratorException
 
