@@ -8,4 +8,4 @@ steps:
     outputfile: Output/out.txt
 - diff:
     paths: '"Output/out.txt" "Expected/out.txt"'
-version: 1.1.0
+version: 1.2.0

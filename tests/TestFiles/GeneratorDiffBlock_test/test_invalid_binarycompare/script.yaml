@@ -4,6 +4,6 @@ steps:
       paths: output/leftpath output/rightpath
       binarycompare: Truee
       strategy: IgnoreLeftOrphans
-      ignorelines: 
+      ignore: 
         - 'Time:'
       

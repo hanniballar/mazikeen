@@ -57,20 +57,42 @@ def __listAllFilesWithoutRoot(path):
     filesWithoutRoot = [pathlib.Path(*f.parts[rootMathLen:]) for f in allFilesWithRoot]
     return filesWithoutRoot
     
-def __getCompareLine(line, fh, compiledIgnoreLines):
-    repeate = True
-    while(repeate):
+def __getCompareLine(line, fh, compiledignore):
+    while(True):
         if not line: return line
-        repeate = False
         try:
             strLine = line.decode('utf-8')
         except:
             return line
-        for ignoreLine in compiledIgnoreLines:
-            if ignoreLine.match(strLine):
-                line = fh.readline()
-                repeate = True
-                break
+
+        lineMatchesSpan = []
+        for ignoreLine in compiledignore:
+            itMatch = ignoreLine.finditer(strLine)
+            for m in itMatch: lineMatchesSpan.append(m.span())
+        lineMatchesSpan.sort()
+
+        def concatenatelineMatches(lineMatchesSpan):
+            idx = 0
+            while idx < len(lineMatchesSpan) - 1:
+                cmpIdx = idx + 1
+                while cmpIdx < len(lineMatchesSpan):
+                    if lineMatchesSpan[idx][1] > lineMatchesSpan[cmpIdx][0]:
+                        lineMatchesSpan[idx] = (lineMatchesSpan[idx][0], max(lineMatchesSpan[idx][1], lineMatchesSpan[cmpIdx][1]))
+                        cmpIdx = idx + 1
+                        del lineMatchesSpan[cmpIdx]
+                    else: cmpIdx += 1
+                idx += 1
+        concatenatelineMatches(lineMatchesSpan)
+
+        def deleteLineMatchesFromString(strLine, lineMatchesSpan):
+            listLine = list(strLine)
+            for matchSpan in reversed(lineMatchesSpan):
+                del listLine[matchSpan[0]:matchSpan[1]]
+            return "".join(listLine)
+        newLine = deleteLineMatchesFromString(strLine, lineMatchesSpan)
+        if not newLine in ['', '\n', '\r', '\r\n']:
+            return str.encode(newLine)
+        line = fh.readline()
     return line
 
 def normalizeEOL(line):
@@ -81,7 +103,7 @@ def normalizeEOL(line):
         line = line[:-1] + bytes('\n', 'utf-8')
     return line
 
-def diffFiles(fileL, fileR, compiledIgnoreLines = [], binaryCompare = False):
+def diffFiles(fileL, fileR, compiledignore = [], binaryCompare = False):
     def areLinesIdentical(lineL, lineR, binaryCompare):
         def normalizeEOL(line):
             if len(line) >=2 and line[-2:] == bytes('\r\n', 'utf-8'): 
@@ -102,18 +124,18 @@ def diffFiles(fileL, fileR, compiledIgnoreLines = [], binaryCompare = False):
                 lineR = fhR.readline()
                 if (not lineL and not lineR): break #EOF reached
                 if areLinesIdentical(lineL, lineR, binaryCompare) == False:
-                    lineL = __getCompareLine(lineL, fhL, compiledIgnoreLines)
-                    lineR = __getCompareLine(lineR, fhR, compiledIgnoreLines)
+                    lineL = __getCompareLine(lineL, fhL, compiledignore)
+                    lineR = __getCompareLine(lineR, fhR, compiledignore)
                     if areLinesIdentical(lineL, lineR, binaryCompare) == False:
                         return False
     return True
 
-def diff(pathL, pathR, binaryCompare = False, diffStrategy = diffStrategy.All, ignoreLines = [], printer = Printer(verbose = True)):
+def diff(pathL, pathR, binaryCompare = False, diffStrategy = diffStrategy.All, ignore = [], printer = Printer(verbose = True)):
     rootM = pathlib.Path(pathL)
     rootS = pathlib.Path(pathR)
-    compiledIgnoreLines = list(map(lambda x: re.compile(x), ignoreLines))
+    compiledignore = list(map(lambda x: re.compile(x), ignore))
     if (rootM.is_file() and rootS.is_file()):
-        if (not diffFiles(rootM, rootS, compiledIgnoreLines = compiledIgnoreLines, binaryCompare = binaryCompare)):
+        if (not diffFiles(rootM, rootS, compiledignore = compiledignore, binaryCompare = binaryCompare)):
             printer.error(f"diff failed: '{rootM}' != '{rootS}'")
             return False
         return True
@@ -126,8 +148,10 @@ def diff(pathL, pathR, binaryCompare = False, diffStrategy = diffStrategy.All, i
     filesM = set(__listAllFilesWithoutRoot(pathL))
     filesS = set(__listAllFilesWithoutRoot(pathR))
     
+    swapFiles = False
     if diffStrategy == diffStrategy.IgnoreLeftOrphans:
-        filesM, filesS = filesS, filesS
+        swapFiles = True
+        filesM, filesS = filesS, filesM
         rootM, rootS = rootS, rootM
     
     if diffStrategy != diffStrategy.IgnoreOrphans:
@@ -144,14 +168,15 @@ def diff(pathL, pathR, binaryCompare = False, diffStrategy = diffStrategy.All, i
     
     for pathM, pathS in comPaths:
         if (pathM.is_file() != pathS.is_file()):
-            printer.error(f"diff failed: '{pathM}' != '{pathS}'")
+            (pathL_, pathR_) = (pathM, pathS) if not swapFiles else (pathS, pathM)
+            printer.error(f"diff failed: '{pathL_}' != '{pathR_}'")
             return False
-    
 
     comFiles = [(pathM, pathS) for pathM, pathS in comPaths if pathM.is_file()]
     for fileM, fileS in comFiles:
-        if (not diffFiles(fileM, fileS, binaryCompare = binaryCompare, compiledIgnoreLines = compiledIgnoreLines)):
-            printer.error(f"diff failed: '{fileM}' != '{fileS}'")
+        if (not diffFiles(fileM, fileS, binaryCompare = binaryCompare, compiledignore = compiledignore)):
+            (fileL, fileR) = (fileM, fileS) if not swapFiles else (fileS, fileM)
+            printer.error(f"diff failed: '{fileL}' != '{fileR}'")
             return False
     return True
 

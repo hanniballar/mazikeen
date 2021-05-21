@@ -14,12 +14,12 @@ def _parseStrategy(data, line, field):
     
     return diffStrategy[data]
 
-def _parseIgnorelines(data, line, field):
-    listIgnorelines = getYamlList(data, line, field)
-    for ignoreline in listIgnorelines:
+def _parseignore(data, line, field):
+    listignore = getYamlList(data, line, field)
+    for ignoreline in listignore:
         if (not isinstance(ignoreline, str)):
             raise GeneratorException(f"Field '{field}' expects a list of strings at line {line}")
-    return listIgnorelines
+    return listignore
 
 def getYamlPaths(data, line = None, field = None):
     if isinstance(data, str):
@@ -41,7 +41,7 @@ def generateDiffBlock(data):
     knownkeys = {'paths': lambda _data: getYamlPaths(_data, data['__line__'], key),
                  'binarycompare': lambda _data: getYamlBool(_data, data['__line__'], key),
                  'strategy': lambda _data: _parseStrategy(_data, data['__line__'], key),
-                 'ignorelines': lambda _data: _parseIgnorelines(_data, data['__line__'], key)}
+                 'ignore': lambda _data: _parseignore(_data, data['__line__'], key)}
     for key in data:
         if key == "__line__": continue
         if not key.lower() in knownkeys.keys():

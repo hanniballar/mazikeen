@@ -89,6 +89,7 @@ def __upgradeScript1_0_0(data):
         for key in data:
             if key.lower() == "steps":
                 fixStepsData(data[key])
+
     def fixStepsData(data):
         if data == None: return
         if not isinstance(data, list): 
@@ -102,12 +103,46 @@ def __upgradeScript1_0_0(data):
                     step[key] = fixRunBlock(step[key])
                 if key.lower() == "diff":
                     step[key] = fixDiffBlock(step[key])
+
     data["version"]="1.1.0"
     fixLooperData(data)
     return (data, Version("1.1.0"))
 
-__upgradeDic = {Version("1.0.0"): __upgradeScript1_0_0}
-__workingVersion = Version("1.1.0")
+def __upgradeScript1_1_0(data):
+    def fixLooperData(data):
+        for key in data:
+            if key.lower() == "steps":
+                fixStepsData(data[key])
+
+    def fixStepsData(data):
+        if data == None: return
+        if not isinstance(data, list): 
+            raise Exception("Scriptfile can not be upgraded")
+
+        for step in data:
+            for key in step:
+                if key.lower() == "steps":
+                    fixStepsData(step[key])
+                if key.lower() == "diff":
+                    step[key] = fixDiffBlock(step[key])
+                    
+    def fixDiffBlock(data):
+        if not isinstance(data, dict): 
+            return data
+        for key in data:
+            if key.lower() == "ignoreline":
+                data['ignore'] = data[key]
+                data.pop(key, None)
+                break
+        return data
+
+    data["version"]="1.2.0"
+    fixLooperData(data)
+    return (data, Version("1.2.0"))
+
+__upgradeDic = {Version("1.0.0"): __upgradeScript1_0_0,
+                Version("1.1.0"): __upgradeScript1_1_0,}
+__workingVersion = Version("1.2.0")
 
 def __upgradeScriptData(data_, printer):
     if data_ == None: return (False, data_)

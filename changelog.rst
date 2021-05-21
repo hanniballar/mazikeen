@@ -2,6 +2,9 @@
 For a complete changelog, see:
 
 * https://github.com/hanniballar/mazikeen/commits
+1.2.0
+-----
+* Diff block attribute `ignoreLine` changed to `ignore`. Being able to ingnore just a portion of the line. The script file did need to adapt.
 1.1.3
 -----
 * mazikeen can now work also with script.yaml version 1.0.0

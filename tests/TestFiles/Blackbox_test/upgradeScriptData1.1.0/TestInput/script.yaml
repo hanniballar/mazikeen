@@ -1,0 +1,6 @@
+---
+version: 1.1.0
+steps:
+  - diff:
+      paths: Input/cmp1.txt Input/cmp2.txt
+      IgnoreLine: ["IgnoreLine1"]

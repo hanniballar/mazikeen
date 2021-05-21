@@ -99,8 +99,8 @@ class diff_Test(unittest.TestCase):
         expectedPath1 = pathlib.Path(r"TestFiles/diff_Test/test_fileAsDirectory/cmp2/f2/file3.txt")
         self.assertEqual(f"Error: diff failed: 'invalidPath1' doesn't exist\n", capturedOutput.getvalue())
 
-    def test_IgnoreLine(self):
-        self.assertTrue(diff("TestFiles/diff_Test/test_IgnoreLines/cmp1", "TestFiles/diff_Test/test_IgnoreLines/cmp2", ignoreLines = ["ignoreLine1", "ignoreLine2", "ignoreLine3", "ignoreLinePattern.*"]))
+    def test_Ignore(self):
+        self.assertTrue(diff("TestFiles/diff_Test/test_Ignore/cmp1", "TestFiles/diff_Test/test_Ignore/cmp2", ignore = ['m','time=.*?\.', 'date and time', '1..31.21']))
         
     def test_nonDefaultEncoding(self):
         self.assertTrue(diff("TestFiles/diff_Test/test_nonDefaultEncoding/cmp1.txt", "TestFiles/diff_Test/test_nonDefaultEncoding/cmp2.txt"))

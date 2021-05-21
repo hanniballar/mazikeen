@@ -4,5 +4,5 @@ steps:
       paths: output/leftpath output/rightpath
       binarycompare: True
       strategy: IgnoreLeftOrphans
-      ignorelines: invalidignorelines
+      ignore: invalidignorelines
       

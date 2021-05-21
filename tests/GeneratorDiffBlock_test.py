@@ -13,7 +13,7 @@ class GeneratorDiffBlock_test(unittest.TestCase):
             block = generateSerialBlock(data)
             self.assertTrue(isinstance(block.steps[0], DiffBlock))
             self.assertEqual(block.steps[0].binarycompare, True)
-            self.assertEqual(block.steps[0].ignorelines, ['Time:'])
+            self.assertEqual(block.steps[0].ignore, ['Time:'])
             self.assertEqual(block.steps[0].paths, ['output/leftpath', 'output/rightpath'])
             self.assertEqual(block.steps[0].strategy, diffStrategy.IgnoreLeftOrphans)
 
@@ -35,10 +35,10 @@ class GeneratorDiffBlock_test(unittest.TestCase):
             with self.assertRaisesRegex(GeneratorException, "Invalid value 'IgnoreLeftOrphanss' for field 'strategy' at line .*") as e:
                 block = generateSerialBlock(data)
 
-    def test_invalid_ignorelines(self):
-        with open('TestFiles/GeneratorDiffBlock_test/test_invalid_ignorelines/script.yaml') as f:
+    def test_invalid_ignore(self):
+        with open('TestFiles/GeneratorDiffBlock_test/test_invalid_ignore/script.yaml') as f:
             data = yaml.load(f, Loader=SafeLineLoader)
-            with self.assertRaisesRegex(GeneratorException, "field 'ignorelines' expects a list at line .*") as e:
+            with self.assertRaisesRegex(GeneratorException, "field 'ignore' expects a list at line .*") as e:
                 block = generateSerialBlock(data)
                 
     def test_invalid_paths_only_one_path(self):
