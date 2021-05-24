@@ -45,7 +45,7 @@ Arguments
 .. code-block:: text
 
 	mazikeen --help
-	usage: mazikeen [-h] [-p PATTERN] [-f] [-s START] [-v] [-j [JOBS]]
+	usage: mazikeen [-h] [-p PATTERN] [-f] [--upgradeScriptFile] [-s START] [-v] [-j [JOBS]]
 					[-r REPORTFILE]
 	
 	Mazikeen test enviroment
@@ -56,6 +56,8 @@ Arguments
 							Only run tests which match pattern. Does support also
 							negative patterns "-PATTERN"
 	-f, --failfast        stop on first faild test as quickly as possible
+	--upgradeScriptFile   save upgraded script file. Script files are upgraded if their version is lower that latest
+                          version
 	-s START, --start-directory START
 							Directory to start discovering tests ('.' default)
 	-v, --verbose         Verbose output
