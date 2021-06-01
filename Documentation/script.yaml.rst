@@ -161,7 +161,7 @@ It has following attributes:
 - outputFile [`path`]
    Shell commands stdout will the saved in outputFile
 - exitcode [`exitcode`]
-   Checks that shell commands exitcode matches this exitcode. If not defined or `None` exitcode will be ignored
+   Checks that shell commands exitcode matches this exitcode. If not defined or `null` exitcode will be ignored
    
 run block example:
 

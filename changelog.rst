@@ -5,6 +5,7 @@ For a complete changelog, see:
 1.2.0
 -----
 * Diff block attribute `ignoreLine` changed to `ignore`. Being able to ingnore just a portion of the line. The script file did need to adapt.
+* Run block attribute 'exitcode' no longer accepts value `None`. It is now written `null` as this is the standart
 1.1.3
 -----
 * mazikeen can now work also with script.yaml version 1.0.0

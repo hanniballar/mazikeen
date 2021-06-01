@@ -1,4 +1,4 @@
-from mazikeen.GeneratorUtils import getYamlString, getYamlInt, getYamlIntOrNone
+from mazikeen.GeneratorUtils import getYamlString, getYamlInt
 from mazikeen.RunBlock import RunBlock
 from mazikeen.GeneratorException import GeneratorException
 
@@ -12,7 +12,8 @@ def generateRunBlock(data):
     knownkeys = {'cmd': lambda _data: getYamlString(_data, data['__line__'], key), 
                  'outputfile': lambda _data: getYamlString(_data, data['__line__'], key),
                  'inputfile': lambda _data: getYamlString(_data, data['__line__'], key),
-                 'exitcode': lambda _data: getYamlIntOrNone(_data, data['__line__'], key)}
+                 'exitcode': lambda _data: getYamlInt(_data, data['__line__'], key),
+                 'shell': lambda _data: getYamlString(_data, data['__line__'], key)}
     for key in data:
         if key == "__line__": continue
         if not key.lower() in knownkeys.keys():

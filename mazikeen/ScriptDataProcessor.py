@@ -125,7 +125,19 @@ def __upgradeScript1_1_0(data):
                     fixStepsData(step[key])
                 if key.lower() == "diff":
                     step[key] = fixDiffBlock(step[key])
-                    
+                if key.lower() == "run":
+                    step[key] = fixRunBlock(step[key])
+
+    def fixRunBlock(data):
+        if not isinstance(data, dict): 
+            return data
+        for key in data:
+            if key.lower() == "exitcode":
+                if data[key] == 'None':
+                    data.pop(key, None)
+                break
+        return data
+
     def fixDiffBlock(data):
         if not isinstance(data, dict): 
             return data

@@ -3,4 +3,6 @@ steps:
     ignore:
     - IgnoreLine1
     paths: Input/cmp1.txt Input/cmp2.txt
+- run:
+    cmd: echo Hello World
 version: 1.2.0
