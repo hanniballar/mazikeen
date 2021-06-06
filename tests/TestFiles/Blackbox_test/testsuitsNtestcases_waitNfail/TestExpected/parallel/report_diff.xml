@@ -5,7 +5,7 @@
 	</testsuite>
 	<testsuite disabled="0" errors="0" failures="1" name="testsuit2" skipped="0" tests="2" time="">
 		<testcase name="testcase1" time="" file="testsuit2/testcase1/script.yaml">
-			<failure type="failure" message="Error: different exitcode received: 0 != 1 for command 'python -c &quot;import time; time.sleep(0.05)&quot;'
+			<failure type="failure" message="Error: different exitcode received: 0 != 1 for command 'python -c &quot;import time; time.sleep(0.1)&quot;'
 "/>
 		</testcase>
 		<testcase name="testcase2" time="" file="testsuit2/testcase2/script.yaml"/>

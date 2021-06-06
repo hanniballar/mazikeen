@@ -16,7 +16,7 @@ Example:
 
 .. code-block:: yaml
 
-version: 1.1.0
+version: 1.2.0
 
 serial
 ----------
@@ -66,7 +66,7 @@ serial block example:
 .. code-block:: yaml
 
   ---
-  version: 1.1.0
+  version: 1.2.0
   entries:
     product:
       shape:
@@ -91,7 +91,7 @@ parallel block example:
 .. code-block:: yaml
 
   ---
-  version: 1.1.0
+  version: 1.2.0
   steps:
     - rmdir: Output
     - makedirs: Output
@@ -131,7 +131,7 @@ diff block example:
 .. code-block:: yaml
 
   ---
-  version: 1.1.0
+  version: 1.2.0
   steps:
     - diff: 
         paths: output/leftpath output/rightpath
@@ -145,7 +145,7 @@ diff block short version:
 .. code-block:: yaml
 
   ---
-  version: 1.1.0
+  version: 1.2.0
   steps:
     - diff: output/leftpath output/rightpath
 
@@ -162,7 +162,9 @@ It has following attributes:
    Shell commands stdout will the saved in outputFile
 - exitcode [`exitcode`]
    Checks that shell commands exitcode matches this exitcode. If not defined or `null` exitcode will be ignored
-   
+- shell [`[cmd | sh | powershell]`]
+   Execute command in selected shell
+
 run block example:
 
 .. code-block:: yaml

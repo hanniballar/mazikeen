@@ -2,6 +2,7 @@ import unittest
 import subprocess
 import os
 import re
+import platform
 from mazikeen.Utils import diff, rmtree, diffStrategy
 from xmldiff import main
 from distutils.dir_util import copy_tree
@@ -15,7 +16,6 @@ class Blackbox(unittest.TestCase):
         with open(outDir + "/mazikenout.txt", "w") as of:
             subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
         self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
-        
 
     def test_inputFileNoutputFile(self):
         testDir = "TestFiles/Blackbox_test/inputFileNoutputFile/"
@@ -160,6 +160,26 @@ class Blackbox(unittest.TestCase):
         with open(outDir + "/mazikenout.txt", "w") as of:
             subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
         self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
+        
+    def test_shellWindows(self):
+        if (platform.system() == "Windows"):
+            testDir = "TestFiles/Blackbox_test/shellWin/"
+            outDir = testDir + "TestOutput"
+            rmtree(outDir)
+            os.makedirs(outDir)
+            with open(outDir + "/mazikenout.txt", "w") as of:
+                subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
+            self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
+            
+    def test_shellLinux(self):
+        if (platform.system() == "Linux"):
+            testDir = "TestFiles/Blackbox_test/shellLinux/"
+            outDir = testDir + "TestOutput"
+            rmtree(outDir)
+            os.makedirs(outDir)
+            with open(outDir + "/mazikenout.txt", "w") as of:
+                subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
+            self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
 
     
 if __name__ == '__main__':

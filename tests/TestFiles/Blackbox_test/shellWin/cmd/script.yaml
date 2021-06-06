@@ -1,0 +1,10 @@
+---
+steps:
+  - rmdir: Output
+  - makedirs: Output
+  - run: 
+      cmd: |
+        dir
+        ver
+      shell: cmd
+      outputfile: Output/out.txt

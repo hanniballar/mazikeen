@@ -1,0 +1,10 @@
+---
+steps:
+  - rmdir: Output
+  - makedirs: Output
+  - run: 
+      cmd: |
+        Get-ChildItem
+        ls
+      shell: powershell
+      outputfile: Output/out.txt

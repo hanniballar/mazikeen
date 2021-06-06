@@ -1,0 +1,9 @@
+---
+steps:
+  - rmdir: Output
+  - makedirs: Output
+  - run: 
+      cmd: ls
+      shell: sh
+      outputfile: Output/out.txt
+  - diff: Output Expected

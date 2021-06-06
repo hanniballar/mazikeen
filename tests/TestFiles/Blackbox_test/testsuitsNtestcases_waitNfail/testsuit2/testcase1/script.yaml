@@ -1,5 +1,5 @@
 ---
 steps:
   - run: 
-      cmd: python -c "import time; time.sleep(0.05)"
+      cmd: python -c "import time; time.sleep(0.1)"
       exitcode: 1

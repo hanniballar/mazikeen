@@ -1,0 +1,9 @@
+[RUN       ] --- cmd
+[    PASSED] --- cmd
+[RUN       ] --- powershell
+[    PASSED] --- powershell
+----------------------------------------------------------------
+Total test cases: 2 passed: 2 skipped: 0 error: 0 failed: 0
+----------------------------------------------------------------
+process time: 0.00 execution time: 0.25
+
