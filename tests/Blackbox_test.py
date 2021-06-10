@@ -16,6 +16,15 @@ class Blackbox(unittest.TestCase):
         with open(outDir + "/mazikenout.txt", "w") as of:
             subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
         self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
+        
+    def test_cmdArg_ScriptName(self):
+        testDir = "TestFiles/Blackbox_test/cmdArg_ScriptName/"
+        outDir = testDir + "TestOutput"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen", "--scriptName", "dummyScriptName.yaml"], stdout=of, stderr=of, cwd = testDir)
+        self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
 
     def test_inputFileNoutputFile(self):
         testDir = "TestFiles/Blackbox_test/inputFileNoutputFile/"

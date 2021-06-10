@@ -1,0 +1,5 @@
+---
+steps:
+  - rmdir: Output
+  - makedirs: Output
+  - run: echo

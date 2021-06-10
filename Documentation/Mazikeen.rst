@@ -58,7 +58,8 @@ Arguments
 	-f, --failfast        stop on first faild test as quickly as possible
 	--upgradeScriptFile   save upgraded script file. Script files are upgraded if their version is lower that latest
                           version
-	-s START, --start-directory START
+	--scriptName NAME     Mazikeen script name (`script.yaml` default)
+	-s DIR, --start-directory DIR
 							Directory to start discovering tests ('.' default)
 	-v, --verbose         Verbose output
 	-j [JOBS], --jobs [JOBS]

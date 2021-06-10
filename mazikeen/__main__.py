@@ -20,7 +20,7 @@ from mazikeen.version import __version__
 from mazikeen.Utils import ensure_dir
 from mazikeen.ScriptDataProcessor import processScriptData
 
-def getScriptFiles(dir, maxLevel=2):
+def getScriptFiles(dir, scriptName, maxLevel=2):
     curLevel = 0
     curLevelDirs = [Path(dir)]
     scriptFiles = []
@@ -32,7 +32,7 @@ def getScriptFiles(dir, maxLevel=2):
             for curFile in map(lambda path: Path(curDir).joinpath(path),dirContent): 
                 if curFile.is_dir(): 
                     tmpNextLevelDir.append(curFile)
-                elif Path(curFile).name == 'script.yaml':
+                elif Path(curFile).name == scriptName:
                     tmpNextLevelDir.clear()
                     scriptFiles.append(str(curFile))
                     break
@@ -65,7 +65,9 @@ def parseArguments():
                         help='stop on first faild test as quickly as possible')
     parser.add_argument( '--upgradeScriptFile', action='store_true', 
                         help='save upgraded script file. Script files are upgraded if their version is lower that latest version')
-    parser.add_argument( '-s','--start-directory', dest='start', type=pathlib.Path, default=".",
+    parser.add_argument( '--scriptName', metavar='NAME', type=str, default="script.yaml",
+                        help='Mazikeen script name (`script.yaml` default)')
+    parser.add_argument( '-s','--start-directory', dest='start', metavar='DIR', type=pathlib.Path, default=".",
                          help="Directory to start discovering tests ('.' default)")
     parser.add_argument('-v', '--verbose', dest='verbose', action='count',
                          help='Verbose output')
@@ -171,7 +173,7 @@ class TestExecuter:
 def main():
     SignalHandler.init()
     args = parseArguments()
-    scriptFiles = getScriptFiles(args.start)
+    scriptFiles = getScriptFiles(args.start, args.scriptName)
     testSuits = createTestSuits(scriptFiles, args.start)
     markTestSkipedByPattern(testSuits, args.pattern)
     genTestExecuter = [TestExecuter(ts, tc, args.upgradeScriptFile) for ts in testSuits for tc in ts.test_cases if not tc.is_skipped()]
