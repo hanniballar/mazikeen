@@ -2,6 +2,10 @@
 For a complete changelog, see:
 
 * https://github.com/hanniballar/mazikeen/commits
+1.2.1
+-----
+* In verbose mode diff will show at what line it failed
+
 1.2.0
 -----
 * Diff block attribute `ignoreLine` changed to `ignore`. Being able to ingnore just a portion of the line. The script file did need to adapt.

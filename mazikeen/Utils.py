@@ -58,12 +58,13 @@ def __listAllFilesWithoutRoot(path):
     return filesWithoutRoot
     
 def __getCompareLine(line, fh, compiledignore):
+    skipedLines = 0
     while(True):
-        if not line: return line
+        if not line: return (line, skipedLines)
         try:
             strLine = line.decode('utf-8')
         except:
-            return line
+            return (line, skipedLines)
 
         lineMatchesSpan = []
         for ignoreLine in compiledignore:
@@ -91,9 +92,10 @@ def __getCompareLine(line, fh, compiledignore):
             return "".join(listLine)
         newLine = deleteLineMatchesFromString(strLine, lineMatchesSpan)
         if not newLine in ['', '\n', '\r', '\r\n']:
-            return str.encode(newLine)
+            return (str.encode(newLine), skipedLines)
         line = fh.readline()
-    return line
+        skipedLines += 1
+    return (line, skipedLines)
 
 def normalizeEOL(line):
     # Todo: can be optimized
@@ -119,24 +121,36 @@ def diffFiles(fileL, fileR, compiledignore = [], binaryCompare = False):
 
     with open(fileL, "rb") as fhL:
         with open(fileR, "rb") as fhR:
+            (lineNrL, lineNrR) = (0, 0)
             while True:
                 lineL = fhL.readline()
+                lineNrL += 1
                 lineR = fhR.readline()
+                lineNrR += 1
                 if (not lineL and not lineR): break #EOF reached
                 if areLinesIdentical(lineL, lineR, binaryCompare) == False:
-                    lineL = __getCompareLine(lineL, fhL, compiledignore)
-                    lineR = __getCompareLine(lineR, fhR, compiledignore)
+                    (lineL, skipedLines) = __getCompareLine(lineL, fhL, compiledignore)
+                    lineNrL += skipedLines
+                    (lineR, skipedLines) = __getCompareLine(lineR, fhR, compiledignore)
+                    lineNrR += skipedLines
                     if areLinesIdentical(lineL, lineR, binaryCompare) == False:
-                        return False
-    return True
+                        return {"lineNrL": lineNrL, 
+                                "lineNrR": lineNrR, 
+                                "lineL": lineL,
+                                "lineR": lineR}
+    return None
 
 def diff(pathL, pathR, binaryCompare = False, diffStrategy = diffStrategy.All, ignore = [], printer = Printer(verbose = True)):
     rootM = pathlib.Path(pathL)
     rootS = pathlib.Path(pathR)
     compiledignore = list(map(lambda x: re.compile(x), ignore))
     if (rootM.is_file() and rootS.is_file()):
-        if (not diffFiles(rootM, rootS, compiledignore = compiledignore, binaryCompare = binaryCompare)):
-            printer.error(f"diff failed: '{rootM}' != '{rootS}'")
+        diffRes = diffFiles(rootM, rootS, compiledignore = compiledignore, binaryCompare = binaryCompare)
+        if (diffRes):
+            if printer.isVerbose():
+                printer.error(f"diff failed: '{rootM}' != '{rootS}'\nwhere: {diffRes['lineNrL']}: {diffRes['lineL']} != {diffRes['lineNrR']}: {diffRes['lineR']}")
+            else:
+                printer.error(f"diff failed: '{rootM}' != '{rootS}'")
             return False
         return True
 
@@ -174,9 +188,13 @@ def diff(pathL, pathR, binaryCompare = False, diffStrategy = diffStrategy.All, i
 
     comFiles = [(pathM, pathS) for pathM, pathS in comPaths if pathM.is_file()]
     for fileM, fileS in comFiles:
-        if (not diffFiles(fileM, fileS, binaryCompare = binaryCompare, compiledignore = compiledignore)):
+        diffRes = diffFiles(fileM, fileS, binaryCompare = binaryCompare, compiledignore = compiledignore)
+        if (diffRes):
             (fileL, fileR) = (fileM, fileS) if not swapFiles else (fileS, fileM)
-            printer.error(f"diff failed: '{fileL}' != '{fileR}'")
+            if printer.isVerbose():
+                printer.error(f"diff failed: '{fileL}' != '{fileR}'\nwhere: {diffRes['lineNrL']}: {diffRes['lineL']} != {diffRes['lineNrR']}: {diffRes['lineR']}")
+            else:
+                printer.error(f"diff failed: '{fileL}' != '{fileR}'")
             return False
     return True
 

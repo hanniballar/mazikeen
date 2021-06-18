@@ -5,6 +5,7 @@ import sys
 import pathlib
 from mazikeen.Utils import replaceVariables, diff, diffStrategy
 from mazikeen.GeneratorException import GeneratorException
+from mazikeen.ConsolePrinter import Printer, BufferedPrinter
 
 class replaceVariables_Test(unittest.TestCase):
     def test_basic(self):
@@ -26,7 +27,7 @@ class diff_Test(unittest.TestCase):
         self.assertFalse(diff("TestFiles/diff_Test/test_basicFileOny/invalid1.txt", "TestFiles/diff_Test/test_basicFileOny/invalid2.txt"))
         sys.stdout = sys.__stdout__
         str = capturedOutput.getvalue()
-        self.assertEqual(f"Error: diff failed: \'{pathlib.Path('TestFiles/diff_Test/test_basicFileOny/invalid1.txt')}\' != \'{pathlib.Path('TestFiles/diff_Test/test_basicFileOny/invalid2.txt')}\'\n", capturedOutput.getvalue())
+        self.assertEqual(f"Error: diff failed: \'{pathlib.Path('TestFiles/diff_Test/test_basicFileOny/invalid1.txt')}\' != \'{pathlib.Path('TestFiles/diff_Test/test_basicFileOny/invalid2.txt')}\'\nwhere: 1: b'valid' != 1: b'invalid'\n", capturedOutput.getvalue())
 
     def test_LinuxNWindowsEOL(self):
         self.assertTrue(diff("TestFiles/diff_Test/test_LinuxNWindowsEOL/cmp1", "TestFiles/diff_Test/test_LinuxNWindowsEOL/cmp2"))
@@ -34,11 +35,12 @@ class diff_Test(unittest.TestCase):
     def test_LinuxNWindowsEOLBinary(self):
         capturedOutput = io.StringIO()
         sys.stdout = capturedOutput
-        self.assertFalse(diff("TestFiles/diff_Test/test_LinuxNWindowsEOL/cmp1", "TestFiles/diff_Test/test_LinuxNWindowsEOL/cmp2", binaryCompare = True))
+        self.assertFalse(diff("TestFiles/diff_Test/test_LinuxNWindowsEOL/cmp1", "TestFiles/diff_Test/test_LinuxNWindowsEOL/cmp2", binaryCompare = True) == None)
         sys.stdout = sys.__stdout__
         expectedPath0 = pathlib.Path(r"TestFiles/diff_Test/test_LinuxNWindowsEOL/cmp1/file1.txt")
         expectedPath1 = pathlib.Path(r"TestFiles/diff_Test/test_LinuxNWindowsEOL/cmp2/file1.txt")
-        self.assertEqual(f"Error: diff failed: '{expectedPath0}' != '{expectedPath1}'\n", capturedOutput.getvalue())
+        printStr = capturedOutput.getvalue()
+        self.assertEqual(f"Error: diff failed: '{expectedPath0}' != '{expectedPath1}'\nwhere: 1: b'line1\\r\\n' != 1: b'line1\\n'\n", printStr)
 
     def test_IgnoreLeftOrphans(self):
         capturedOutput = io.StringIO()
@@ -101,9 +103,17 @@ class diff_Test(unittest.TestCase):
 
     def test_Ignore(self):
         self.assertTrue(diff("TestFiles/diff_Test/test_Ignore/cmp1", "TestFiles/diff_Test/test_Ignore/cmp2", ignore = ['m','time=.*?\.', 'date and time', '1..31.21']))
-        
-    def test_nonDefaultEncoding(self):
-        self.assertTrue(diff("TestFiles/diff_Test/test_nonDefaultEncoding/cmp1.txt", "TestFiles/diff_Test/test_nonDefaultEncoding/cmp2.txt"))
+    
+    def test_Ignore_False(self):
+        printer = Printer(verbose = True)
+        capturedOutput = io.StringIO()
+        sys.stdout = capturedOutput
+        self.assertFalse(diff("TestFiles/diff_Test/test_Ignore_False/cmp1", "TestFiles/diff_Test/test_Ignore_False/cmp2", ignore = ['m','time=.*?\.', 'date and time', '1..31.21', "ignoreText"], printer = printer))
+        printedStr = capturedOutput.getvalue()
+        expectedPath0 = pathlib.Path(r"TestFiles/diff_Test/test_Ignore_False/cmp1/file1.txt")
+        expectedPath1 = pathlib.Path(r"TestFiles/diff_Test/test_Ignore_False/cmp2/file1.txt")
+        resStr = f"Error: diff failed: '{expectedPath0}' != '{expectedPath1}'\nwhere: 2: b'y  Additional text so that test fails\\r\\n' != 3: b'y \\n'\n"
+        self.assertEqual(printedStr, resStr)
 
 if __name__ == '__main__':
     unittest.main()
