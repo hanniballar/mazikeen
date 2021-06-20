@@ -1,0 +1,9 @@
+---
+steps:
+  - rmdir: Output
+  - makedirs: Output
+  - run: 
+      cmd: print("Hello Python")
+      shell: python3
+      outputfile: Output/out.txt
+  - diff: Output Expected

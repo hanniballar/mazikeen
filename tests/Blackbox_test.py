@@ -102,7 +102,7 @@ class Blackbox(unittest.TestCase):
                     ofile.write(line)
         self.assertEqual(main.diff_files(outDir + "/report_diff.xml", outDir + "/report_diff.xml"), [])
         self.assertTrue(diff(testDir + "TestOutput/parallel/mazikenout.txt", testDir + "TestExpected/parallel/mazikenout.txt", ignore = ["process time: .*"]))
-        
+
     def test_testsuitsNtestcases_waitNfail_serial(self):
         testDir = "TestFiles/Blackbox_test/testsuitsNtestcases_waitNfail/"
         outDir = testDir + "TestOutput/serial/"
@@ -136,7 +136,7 @@ class Blackbox(unittest.TestCase):
                     ofile.write(line)
         self.assertEqual(main.diff_files(outDir + "/report_diff.xml", outDir + "/report_diff.xml"), [])
         self.assertTrue(diff(testDir + "TestOutput/failFast/mazikenout.txt", testDir + "TestExpected/failFast/mazikenout.txt", ignore = ["process time: .*"]))
-        
+
     def test_upgradeScriptData1_0_0(self):
         testDir = "TestFiles/Blackbox_test/upgradeScriptData1.0.0/"
         outDir = testDir + "TestOutput/"
@@ -148,7 +148,7 @@ class Blackbox(unittest.TestCase):
 
         self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
         self.assertTrue(diff(testDir + "TestOutput/script.yaml", testDir + "TestExpected/script.yaml"))
-        
+
     def test_upgradeScriptData1_1_0(self):
         testDir = "TestFiles/Blackbox_test/upgradeScriptData1.1.0/"
         outDir = testDir + "TestOutput/"
@@ -160,7 +160,7 @@ class Blackbox(unittest.TestCase):
 
         self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
         self.assertTrue(diff(testDir + "TestOutput/script.yaml", testDir + "TestExpected/script.yaml"))
-        
+
     def test_emptyTest(self):
         testDir = "TestFiles/Blackbox_test/emptyTest/"
         outDir = testDir + "TestOutput/"
@@ -169,7 +169,7 @@ class Blackbox(unittest.TestCase):
         with open(outDir + "/mazikenout.txt", "w") as of:
             subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
         self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
-        
+
     def test_shellWindows(self):
         if (platform.system() == "Windows"):
             testDir = "TestFiles/Blackbox_test/shellWin/"
@@ -179,7 +179,7 @@ class Blackbox(unittest.TestCase):
             with open(outDir + "/mazikenout.txt", "w") as of:
                 subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
             self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
-            
+
     def test_shellLinux(self):
         if (platform.system() == "Linux"):
             testDir = "TestFiles/Blackbox_test/shellLinux/"
@@ -189,6 +189,15 @@ class Blackbox(unittest.TestCase):
             with open(outDir + "/mazikenout.txt", "w") as of:
                 subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
             self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
+
+    def test_shellPython(self):
+        testDir = "TestFiles/Blackbox_test/shellPython/"
+        outDir = testDir + "TestOutput"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
+        self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
 
     
 if __name__ == '__main__':

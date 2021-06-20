@@ -5,6 +5,7 @@ For a complete changelog, see:
 1.2.1
 -----
 * In verbose mode diff will show at what line it failed
+* Added `python` as run block shell argument 
 
 1.2.0
 -----

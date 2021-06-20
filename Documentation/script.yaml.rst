@@ -162,7 +162,7 @@ It has following attributes:
    Shell commands stdout will the saved in outputFile
 - exitcode [`exitcode`]
    Checks that shell commands exitcode matches this exitcode. If not defined or `null` exitcode will be ignored
-- shell [`[cmd | sh | powershell]`]
+- shell [`[cmd | sh | powershell | python | python3]`]
    Execute command in selected shell
 
 run block example:
