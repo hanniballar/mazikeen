@@ -1,11 +1,11 @@
+version: 1.2.0
 steps:
 - run:
     cmd: echo Dummy text
     exitcode: 0
 - run:
     cmd: echo Dummy text
-    exitcode: 0
     outputfile: Output/out.txt
+    exitcode: 0
 - diff:
     paths: '"Output/out.txt" "Expected/out.txt"'
-version: 1.2.0

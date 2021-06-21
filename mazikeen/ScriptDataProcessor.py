@@ -190,6 +190,6 @@ def processScriptData(file, saveUpgradedScript = False, printer = Printer()):
         dumpData = copy.deepcopy(data)
         __removeLineInfo(dumpData)
         with open(file, "w") as f:
-            yaml.dump(dumpData, f)
+            yaml.dump(dumpData, f, sort_keys=False)
     data.pop("version", None)
     return data
