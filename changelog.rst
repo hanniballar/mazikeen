@@ -2,6 +2,10 @@
 For a complete changelog, see:
 
 * https://github.com/hanniballar/mazikeen/commits
+1.2.2
+-----
+* Upgrade script file correctly handles diff blocks `ignorelines` attribute
+
 1.2.1
 -----
 * In verbose mode diff will show at what line it failed

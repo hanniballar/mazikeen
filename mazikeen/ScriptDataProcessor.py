@@ -142,7 +142,7 @@ def __upgradeScript1_1_0(data):
         if not isinstance(data, dict): 
             return data
         for key in data:
-            if key.lower() == "ignoreline":
+            if key.lower() == "ignorelines":
                 data['ignore'] = data[key]
                 data.pop(key, None)
                 break
