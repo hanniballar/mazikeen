@@ -20,11 +20,11 @@ setuptools.setup(
         "Bug Tracker": "https://github.com/hanniballar/mazikeen/issues",
     },
     license_file = LICENSE,
-    license="Unlicense",
+    license="MIT",
     classifiers=[
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: The Unlicense (Unlicense)",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Topic :: Software Development :: Testing",
         "Topic :: Utilities"
