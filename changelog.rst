@@ -2,6 +2,9 @@
 For a complete changelog, see:
 
 * https://github.com/hanniballar/mazikeen/commits
+1.2.5
+-----
+* Updated documentation
 1.2.4
 -----
 * License was change to MIT

@@ -1,5 +1,6 @@
-`mazikeen` test framework is designed for Command Line Applications. It's main feature is that every test has it's own directory.
-`mazikeen` empathise parralel testing.
+`mazikeen` is a test framework for command line applications.
+`mazikeen` was created to facilitae testing of CLI application that have a predictable output. It facilitates testing on different operating systems by provideing a diff method that is agnostic to newline and make / remove directory. For `mazikeen` every test has it's own directory helping debugging and organizing tests.
+|`mazikeen` empathise parralel testing.
 
 The test structure looks like:
 ::
@@ -41,8 +42,8 @@ To execute it::
 
 Features
 --------
-
-- Every test case is a directory. Making it very to debug a failing test as all relevant data is stored in one place.
+- Provides diff functions agnostic to newline and other common operations for different operating systems like make and remove directory. 
+- Every test case is a directory. Making it easy to debug a failing test as all relevant data is stored in one place.
 - Parallel execution support. Testscases can be executed in parallel. A testcase can call multiple CLI applications in parallel.
 
 
