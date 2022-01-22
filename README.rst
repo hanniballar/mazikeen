@@ -1,6 +1,6 @@
 `mazikeen` is a test framework for command line applications.
 `mazikeen` was created to facilitae testing of CLI application that have a predictable output. It facilitates testing on different operating systems by provideing a diff method that is agnostic to newline and make / remove directory. For `mazikeen` every test has it's own directory helping debugging and organizing tests.
-|`mazikeen` empathise parralel testing.
+`mazikeen` empathise parralel testing.
 
 The test structure looks like:
 ::
