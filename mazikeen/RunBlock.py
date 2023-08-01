@@ -26,7 +26,7 @@ class RunBlock:
 
         printer.verbose("Run:", self.cmd)
         replCmd = replaceVariables(self.cmd, variables)
-        printer.verbose("cwd:", os.getcwd())
+        printer.verbose("cwd:", os.path.abspath(workingDir))
         printer.verbose("call:", replCmd)
         cmdNArgs = shlex.split(replCmd)
 

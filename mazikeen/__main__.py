@@ -20,11 +20,11 @@ from mazikeen.version import __version__
 from mazikeen.Utils import ensure_dir
 from mazikeen.ScriptDataProcessor import processScriptData
 
-def getScriptFiles(dir, scriptName, maxLevel=2):
+def getScriptFiles(dir, scriptName, maxLevel=-1):
     curLevel = 0
     curLevelDirs = [Path(dir)]
     scriptFiles = []
-    while(curLevelDirs and (curLevel <= maxLevel)):
+    while(curLevelDirs and (curLevel != maxLevel)):
         nextLevelDir = []
         for curDir in curLevelDirs:
             tmpNextLevelDir = []

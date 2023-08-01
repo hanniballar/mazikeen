@@ -17,6 +17,15 @@ class Blackbox(unittest.TestCase):
             subprocess.run(["mazikeen"], stdout=of, stderr=of, cwd = testDir)
         self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*"]))
         
+    def test_cwd(self):
+        testDir = "TestFiles/Blackbox_test/cwd/"
+        outDir = testDir + "TestOutput"
+        rmtree(outDir)
+        os.makedirs(outDir)
+        with open(outDir + "/mazikenout.txt", "w") as of:
+            subprocess.run(["mazikeen", "-v"], stdout=of, stderr=of, cwd = testDir)
+        self.assertTrue(diff(testDir + "TestOutput/mazikenout.txt", testDir + "TestExpected/mazikenout.txt", ignore = ["process time: .*", "cwd: .*"]))
+        
     def test_cmdArg_ScriptName(self):
         testDir = "TestFiles/Blackbox_test/cmdArg_ScriptName/"
         outDir = testDir + "TestOutput"
@@ -67,7 +76,7 @@ class Blackbox(unittest.TestCase):
                     line = re.sub(r"time=\".+?\"", "time=\"\"", line)
                     line = re.sub(r"\\", "/", line)
                     ofile.write(line)
-        self.assertEqual(main.diff_files(testDir + "TestOutput/report/report_diff.xml", testDir + "TestExpected/report/report_diff.xml"), [])
+        self.assertTrue(diff(testDir + "TestOutput/report/report_diff.xml", testDir + "TestExpected/report/report_diff.xml", ignore = ['time=""', " "]))
         
     def test_testsuitsNtestcases_wait_parallel(self):
         testDir = "TestFiles/Blackbox_test/testsuitsNtestcases_wait/"

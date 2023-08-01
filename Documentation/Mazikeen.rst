@@ -46,28 +46,25 @@ Arguments
 .. code-block:: text
 
 	mazikeen --help
-	usage: mazikeen [-h] [-p PATTERN] [-f] [--upgradeScriptFile] [-s START] [-v] [-j [JOBS]]
-					[-r REPORTFILE]
-	
+	usage: mazikeen [-h] [-p PATTERN] [-f] [--upgradeScriptFile] [--scriptName NAME] [-s DIR] [-v] [-j [JOBS]] [-r REPORTFILE] [--version]
+
 	Mazikeen test enviroment
-	
+
 	optional arguments:
-	-h, --help            show this help message and exit
-	-p PATTERN, --pattern PATTERN
-							Only run tests which match pattern. Does support also
-							negative patterns "-PATTERN"
-	-f, --failfast        stop on first faild test as quickly as possible
-	--upgradeScriptFile   save upgraded script file. Script files are upgraded if their version is lower that latest
-                          version
-	--scriptName NAME     Mazikeen script name (`script.yaml` default)
-	-s DIR, --start-directory DIR
-							Directory to start discovering tests ('.' default)
-	-v, --verbose         Verbose output
-	-j [JOBS], --jobs [JOBS]
-							Specifies the number of jobs to run simultaneously
-	-r REPORTFILE, --report REPORTFILE
-							Create junit test report
-							
+	  -h, --help            show this help message and exit
+	  -p PATTERN, --pattern PATTERN
+	                        Only run tests which match pattern. Does support also negative patterns "-PATTERN"
+	  -f, --failfast        stop on first faild test as quickly as possible
+	  --upgradeScriptFile   save upgraded script file. Script files are upgraded if their version is lower that latest version
+	  --scriptName NAME     Mazikeen script name (`script.yaml` default)
+	  -s DIR, --start-directory DIR
+	                        Directory to start discovering tests ('.' default)
+	  -v, --verbose         Verbose output
+	  -j [JOBS], --jobs [JOBS]
+	                        Specifies the number of jobs to run simultaneously
+	  -r REPORTFILE, --report REPORTFILE
+	                        Create junit test report
+	  --version             show program's version number and exit
 script.yaml
 -----------
 For full documentation, please see https://github.com/hanniballar/mazikeen/blob/master/Documentation/script.yaml.rst.

@@ -1,0 +1,15 @@
+[RUN       ] --- L1.0/L2.0
+Run: echo Hello L2.0
+cwd: mazikeen\tests\TestFiles\Blackbox_test\cwd\L1.0\L2.0
+call: echo Hello L2.0
+[    PASSED] --- L1.0/L2.0 --- process time: 0.00 execution time: 0.02
+[RUN       ] --- L1.1
+Run: echo Hello L1.1
+cwd: mazikeen\tests\TestFiles\Blackbox_test\cwd\L1.1
+call: echo Hello L1.1
+[    PASSED] --- L1.1 --- process time: 0.00 execution time: 0.02
+----------------------------------------------------------------
+Total test cases: 2 passed: 2 skipped: 0 error: 0 failed: 0
+----------------------------------------------------------------
+process time: 0.00 execution time: 0.03
+
