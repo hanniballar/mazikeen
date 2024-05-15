@@ -2,6 +2,9 @@
 For a complete changelog, see:
 
 * https://github.com/hanniballar/mazikeen/commits
+1.2.8
+-----
+* mazikeen will exit with error code when tests are failing.
 1.2.7
 -----
 * Bugfix: when running `mazikeen --verbose` the value for `cwd` was the terminal current working directory. Now `cwd` is the working directory of the test that is being executed.

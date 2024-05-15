@@ -200,7 +200,7 @@ def main():
         ensure_dir(args.reportfile)
         with open(args.reportfile, "w") as fw:
             fw.write(TestSuite.to_xml_string(testSuits))
-    exit(report["error"] > 0)
+    exit(report["error"] + report["failed"] > 0)
     
 if __name__ == '__main__':
     main()
