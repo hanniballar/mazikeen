@@ -28,7 +28,10 @@ def getScriptFiles(dir, scriptName, maxLevel=-1):
         nextLevelDir = []
         for curDir in curLevelDirs:
             tmpNextLevelDir = []
-            dirContent = os.listdir(curDir)
+            try:
+                dirContent = os.listdir(curDir)
+            except OSError:
+                continue # Skip directories that can't be read
             for curFile in map(lambda path: Path(curDir).joinpath(path),dirContent): 
                 if curFile.is_dir(): 
                     tmpNextLevelDir.append(curFile)
@@ -57,7 +60,7 @@ def createTestSuits(scriptFiles, root):
     return testSuits
 
 def parseArguments():
-    parser = argparse.ArgumentParser(description='Mazikeen test enviroment')
+    parser = argparse.ArgumentParser(description='Mazikeen test enviroment', prog='mazikeen')
      
     parser.add_argument( '-p','--pattern', metavar='PATTERN', type=str,
                         help='Only run tests which match pattern. Does support also negative patterns "-PATTERN"')

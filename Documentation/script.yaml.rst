@@ -123,7 +123,7 @@ It has following attributes:
 - binarycompare [ `True` | `False` ]
    Perform binary compare. Default `False`
 - strategy [ `IgnoreLeftOrphans` | `IgnoreRightOrphans` | `IgnoreOrphans` | `All` ]
-- ignorelines [`regex pattern`]
+- ignore [`regex pattern`]
    Lines that match this patterns are ignored
 
 diff block example:
@@ -137,7 +137,7 @@ diff block example:
         paths: output/leftpath output/rightpath
         binarycompare: True
         strategy: IgnoreLeftOrphans
-        ignorelines: 
+        ignore: 
           - 'Time:'
 
 diff block short version:

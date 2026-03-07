@@ -2,6 +2,10 @@
 For a complete changelog, see:
 
 * https://github.com/hanniballar/mazikeen/commits
+1.2.9
+-----
+* Bugfix: When mazikeen displays the version
+* Bugfix: Mazikeen will no longer crash when it doesn't have permisions to access a file.
 1.2.8
 -----
 * mazikeen will exit with error code when tests are failing.
